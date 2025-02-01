@@ -154,7 +154,7 @@
                       <div class="field">
                         <label class="label" for="phoneNumber">Phone Number</label>
                         <div class="control">
-                          <input class="input" type="tel" id="phoneNumber" placeholder="Phone Number" required />
+                          <input class="input" type="tel" id="phoneNumber" pattern="\d{10}" placeholder="Phone Number" required />
                         </div>
                       </div>
                     </div>
@@ -162,7 +162,7 @@
                       <div class="field">
                         <label class="label" for="alternatePhoneNumber">Alternate Phone Number</label>
                         <div class="control">
-                          <input class="input" type="tel" id="alternatePhoneNumber"
+                          <input class="input" type="tel" pattern="\d{10}" id="alternatePhoneNumber"
                             placeholder="Alternate Phone Number" />
                         </div>
                       </div>
@@ -171,7 +171,7 @@
                       <div class="field">
                         <label class="label" for="aadhaarNumber">Aadhaar Number</label>
                         <div class="control">
-                          <input class="input" type="tel" id="aadhaarNumber" placeholder="Aadhaar Number" />
+                          <input class="input" type="tel" id="aadhaarNumber" pattern="\d{12}" placeholder="Aadhaar Number" />
                         </div>
                       </div>
                     </div>
@@ -208,6 +208,14 @@
                         <label class="label" for="cgpa">CGPA / Percentage</label>
                         <div class="control">
                           <input class="input" type="text" id="cgpa" placeholder="CGPA / Percentage" required />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="members">Accompanying persons</label>
+                        <div class="control">
+                          <input class="input" type="number"min="0" id="members" placeholder="In number" required />
                         </div>
                       </div>
                     </div>
@@ -249,7 +257,7 @@
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function () {
-      const apiUrl = "https://script.google.com/macros/s/AKfycbx6xJS7ougpL0KZ8B0snR1gkXlCj1X2Pdv-wO9v4I4AZxbyubFvFa1CU4Ftkj3tVvVWcw/exec";
+      const apiUrl = "https://script.google.com/macros/s/AKfycbycJ5ZWtG12XnCktKcNPctl-H8VPMW24lQDceZ0wq6cFWx_C1C-PmxLMXe-nn0wGN3Enw/exec";
       let isSubmitting = false; // Flag to prevent multiple submissions
 
       // Show loading spinner
@@ -281,14 +289,14 @@
           dob: $("#dob").val(),
           gender: $("input[name='gender']:checked").val(),
           email: $("#email").val(),
-          phoneNumber: $("#phoneNumber").val(),
+          phoneNumber: parseInt($("#phoneNumber").val()),
           alternatePhoneNumber: $("#alternatePhoneNumber").val(),
           aadhaarNumber: $("#aadhaarNumber").val(),
           collegeName: $("#collegeName").val(),
           degree: $("#degree").val(),
           branch: $("#branch").val(),
           cgpa: $("#cgpa").val(),
-          declaration: $("#declaration").val(),
+          members:$("#members").val(),
         };
 
         $.getJSON(
@@ -330,40 +338,62 @@
           submitBtn.prop("disabled", false); // Re-enable submit button
         });
       });
-
       function downloadData(formData) {
-    if (formData && Object.keys(formData).length > 0) {
-        // Initialize jsPDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        // Add a title to the PDF (optional)
-        doc.setFontSize(18);
-        doc.text('Convocation Data', 14, 20);
-
-        // Convert JSON data into an array of rows for the table
-        const tableData = Object.keys(formData).map(key => [key, formData[key]]);
-
-       
-        // Add the table using autoTable
-        doc.autoTable({
-            startY: 30, // Start below the title
-            body: tableData, // Table data
-            margin: { left: 14, right: 14 }, // Set margins
-            tableWidth: 'auto', // Use full page width
-            styles: {
-                fontSize: 12, // Font size for table content
-                cellPadding: 5, // Padding inside cells
-            },
-        });
-
-        // Save the PDF with the name "convocation_data.pdf"
-        doc.save('convocation_data.pdf');
-    } else {
-        alert("No data found!");
+        var keyMap = {
+            "fullName": "Full Name",
+            "studentId": "Student ID",
+            "dob": "Date of Birth",
+            "gender": "Gender",
+            "email": "Email",
+            "phoneNumber": "Phone Number",
+            "alternatePhoneNumber": "Alternate Phone Number",
+            "aadhaarNumber": "Aadhaar Number",
+            "collegeName": "College Name",
+            "degree": "Degree",
+            "branch": "Branch",
+            "cgpa": "CGPA",
+             "members":"Accompanying persons "
+        };
+    
+        if (formData && Object.keys(formData).length > 0) {
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+    
+            // Add a title to the PDF
+            doc.setFontSize(18);
+            doc.text('Registration Details', 14, 20);
+    
+            // Convert JSON data into an array of rows for the table
+            const tableData = Object.keys(formData).map(key => [keyMap[key], formData[key]]);
+    
+            // Add the table using autoTable
+            let finalY = 30; // Start below the title
+            doc.autoTable({
+                startY: finalY,
+                body: tableData,
+                margin: { left: 14, right: 14 },
+                tableWidth: 'auto',
+                styles: {
+                    fontSize: 12,
+                    cellPadding: 5,
+                },
+                didDrawPage: function (data) {
+                    finalY = data.cursor.y; // Get the Y position after the table
+                }
+            });
+    
+            // Add custom text at the bottom of the PDF
+            doc.setFontSize(12);
+            doc.text("You confirm that the above details are correct.", 14, finalY + 10);
+    
+            // Save the PDF with the name "convocation_data.pdf"
+            doc.save('convocation_data.pdf');
+        } else {
+            alert("No data found!");
+        }
     }
-}
-
+    
 
     });
   </script>
