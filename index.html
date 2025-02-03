@@ -177,49 +177,168 @@
                     </div>
                   </div>
 
-                  <!-- Academic Details -->
-                  <div class="columns">
-                    <div class="column">
-                      <div class="field">
-                        <label class="label" for="collegeName">College / Institution Name</label>
-                        <div class="control">
-                          <input class="input" type="text" id="collegeName" placeholder="College Name" required />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column">
-                      <div class="field">
-                        <label class="label" for="degree">Degree (B.Tech, M.Tech, MBA, etc.)</label>
-                        <div class="control">
-                          <input class="input" type="text" id="degree" placeholder="Degree" required />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column">
-                      <div class="field">
-                        <label class="label" for="branch">Branch / Specialization</label>
-                        <div class="control">
-                          <input class="input" type="text" id="branch" placeholder="Branch" required />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column">
-                      <div class="field">
-                        <label class="label" for="cgpa">CGPA / Percentage</label>
-                        <div class="control">
-                          <input class="input" type="text" id="cgpa" placeholder="CGPA / Percentage" required />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="column">
-                      <div class="field">
-                        <label class="label" for="members">Accompanying persons</label>
-                        <div class="control">
-                          <input class="input" type="number"min="0" id="members" placeholder="In number" required />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Academic Details -->
+
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label" for="collegeName">College / Institution Name</label>
+        <div class="control">
+          <input class="input" type="text" id="collegeName" placeholder="College Name" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="degree">Degree (B.Tech, M.Tech, MBA, etc.)</label>
+        <div class="control">
+          <input class="input" type="text" id="degree" placeholder="Degree" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="branch">Branch / Specialization</label>
+        <div class="control">
+          <input class="input" type="text" id="branch" placeholder="Branch" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="cgpa">CGPA / Percentage</label>
+        <div class="control">
+          <input class="input" type="text" id="cgpa" placeholder="CGPA / Percentage" required />
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <label class="label" for="members">Accompanying persons</label>
+        <div class="control">
+          <input class="input" type="number" min="0" id="members" placeholder="In number" required />
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+   <!--  <div class="columns">
+
+       
+  
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="yearOfAdmission">Year of Admission</label>
+        <div class="control">
+          <input class="input" type="number" id="yearOfAdmission" placeholder="Year of Admission" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="yearOfCompletion">Year of Completion</label>
+        <div class="control">
+          <input class="input" type="number" id="yearOfCompletion" placeholder="Year of Completion" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="universityRegNumber">University Registration Number</label>
+        <div class="control">
+          <input class="input" type="text" id="universityRegNumber" placeholder="Registration Number" required />
+        </div>
+      </div>
+    </div>
+  </div>
+   -->
+
+<!-- Professional Details -->
+
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label" for="employmentStatus">Current Employment Status</label>
+      <div class="control">
+        <input class="input" type="text" id="employmentStatus" placeholder="Employed / Self-Employed / Higher Studies / Unemployed" required />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="companyName">Company / Organization Name (if employed)</label>
+      <div class="control">
+        <input class="input" type="text" id="companyName" placeholder="Company Name" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="designation">Designation</label>
+      <div class="control">
+        <input class="input" type="text" id="designation" placeholder="Designation" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="workLocation">Work Location (City, Country)</label>
+      <div class="control">
+        <input class="input" type="text" id="workLocation" placeholder="City, Country" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label" for="industry">Industry / Sector</label>
+      <div class="control">
+        <input class="input" type="text" id="industry" placeholder="Industry / Sector" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="experience">Years of Experience</label>
+      <div class="control">
+        <input class="input" type="number" min="0" id="experience" placeholder="Years of Experience" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="professionalEmail">Professional Email ID</label>
+      <div class="control">
+        <input class="input" type="email" id="professionalEmail" placeholder="Email ID" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="linkedin">LinkedIn Profile (if available)</label>
+      <div class="control">
+        <input class="input" type="url" id="linkedin" placeholder="LinkedIn Profile URL" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="furtherStudies">Further Studies (if applicable)</label>
+      <div class="control">
+        <input class="input" type="text" id="furtherStudies" placeholder="University & Course" />
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -296,8 +415,23 @@
           degree: $("#degree").val(),
           branch: $("#branch").val(),
           cgpa: $("#cgpa").val(),
-          members:$("#members").val(),
+          members: $("#members").val(),
+         // yearOfAdmission: $("#yearOfAdmission").val(),
+         // yearOfCompletion: $("#yearOfCompletion").val(),
+         // universityRegNumber: $("#universityRegNumber").val(),
+        
+          // Professional Details
+          employmentStatus: $("#employmentStatus").val() || "",
+          companyName: $("#companyName").val() || "",
+          designation: $("#designation").val() || "",
+          workLocation: $("#workLocation").val() || "",
+          industry: $("#industry").val() || "",
+          experience: parseInt($("#experience").val()) || "",
+          professionalEmail: $("#professionalEmail").val() || "",
+          linkedin: $("#linkedin").val() || "",
+          furtherStudies: $("#furtherStudies").val() || "",
         };
+        
 
         $.getJSON(
           apiUrl + "?action=add&callback=?&data=" + encodeURIComponent(JSON.stringify(formData)),
@@ -340,20 +474,33 @@
       });
       function downloadData(formData) {
         var keyMap = {
-            "fullName": "Full Name",
-            "studentId": "Student ID",
-            "dob": "Date of Birth",
-            "gender": "Gender",
-            "email": "Email",
-            "phoneNumber": "Phone Number",
-            "alternatePhoneNumber": "Alternate Phone Number",
-            "aadhaarNumber": "Aadhaar Number",
-            "collegeName": "College Name",
-            "degree": "Degree",
-            "branch": "Branch",
-            "cgpa": "CGPA",
-             "members":"Accompanying persons "
-        };
+          "fullName": "Full Name",
+          "studentId": "Student ID",
+          "dob": "Date of Birth",
+          "gender": "Gender",
+          "email": "Email",
+          "phoneNumber": "Phone Number",
+          "alternatePhoneNumber": "Alternate Phone Number",
+          "aadhaarNumber": "Aadhaar Number",
+          "collegeName": "College Name",
+          "degree": "Degree",
+          "branch": "Branch",
+          "cgpa": "CGPA",
+          "members": "Accompanying persons",
+     
+          "employmentStatus": "Current Employment Status",
+          "companyName": "Company / Organization Name",
+          "designation": "Designation",
+          "workLocation": "Work Location",
+          "industry": "Industry / Sector",
+          "experience": "Years of Experience",
+          "professionalEmail": "Professional Email ID",
+          "linkedin": "LinkedIn Profile",
+          "furtherStudies": "Further Studies"
+      };
+      //"yearOfAdmission": "Year of Admission",
+      //"yearOfCompletion": "Year of Completion",
+      //"universityRegNumber": "University Registration Number",
     
         if (formData && Object.keys(formData).length > 0) {
             // Initialize jsPDF
