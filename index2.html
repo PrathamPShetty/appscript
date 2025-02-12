@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css" />
+  
+  <style>
+    header {
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+    }
+
+    nav {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+      position: relative;
+    }
+
+    .logo {
+      position: absolute;
+      left: 1rem;
+    }
+
+    .logo img {
+      height: 5rem; /* Increased logo size */
+      width: auto;
+    }
+
+    .heading {
+      font-weight: bold;
+      font-size: 1.75rem; /* Slightly larger font */
+      text-align: center;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: row;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .logo {
+        left: 0.5rem;
+      }
+
+      .logo img {
+        height: 4rem; /* Smaller logo for mobile */
+      }
+
+      .heading {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <img src="https://dial4college.blr1.cdn.digitaloceanspaces.com/pro/2248/logo/1706010142.png" alt="Logo" />
+      </div>
+      <h1 class="heading">Srinivas Group</h1>
+    </nav>
+  </header>
+  
+  
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column ">
+            <div class="card card-registration">
+              <div class="card-content">
+                <h6 class="title  has-text-centered mb-5">Srinivas Group Convocation Registration Form</h6>
+                <div class="notification is-success" id="successMessage" style="display: none;">
+         {}
+                </div>
+                <div class="notification is-danger" id="errorMessage" style="display: none;">
+           {}
+                </div>
+                
+                <form id="convocationForm">
+                  <!-- Personal Details -->
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="fullName">Full Name (as per certificates)</label>
+                        <div class="control">
+                          <input class="input" type="text" id="fullName" placeholder="Full Name" required />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="studentId">Student ID / Roll Number</label>
+                        <div class="control">
+                          <input class="input" type="text" id="studentId" placeholder="Student ID" required />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="dob">Date of Birth</label>
+                        <div class="control">
+                          <input class="input" type="date" id="dob" required />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label">Gender</label>
+                        <div class="control">
+                          <label class="radio">
+                            <input type="radio" name="gender" value="female" required />
+                            Female
+                          </label>
+                          <label class="radio">
+                            <input type="radio" name="gender" value="male" required />
+                            Male
+                          </label>
+                          <label class="radio">
+                            <input type="radio" name="gender" value="other" required />
+                            Other
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Contact Details -->
+                  <div class="columns">
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="email">Email</label>
+                        <div class="control">
+                          <input class="input" type="email" id="email" placeholder="Email" required />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="phoneNumber">Phone Number</label>
+                        <div class="control">
+                          <input class="input" type="tel" id="phoneNumber" pattern="\d{10}" placeholder="Phone Number" required />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="alternatePhoneNumber">Alternate Phone Number</label>
+                        <div class="control">
+                          <input class="input" type="tel" pattern="\d{10}" id="alternatePhoneNumber"
+                            placeholder="Alternate Phone Number" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <div class="field">
+                        <label class="label" for="aadhaarNumber">Aadhaar Number</label>
+                        <div class="control">
+                          <input class="input" type="tel" id="aadhaarNumber" pattern="\d{12}" placeholder="Aadhaar Number" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                <!-- Academic Details -->
+
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label" for="collegeName">College / Institution Name</label>
+        <div class="control">
+          <input class="input" type="text" id="collegeName" placeholder="College Name" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="degree">Degree (B.Tech, M.Tech, MBA, etc.)</label>
+        <div class="control">
+          <input class="input" type="text" id="degree" placeholder="Degree" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="branch">Branch / Specialization</label>
+        <div class="control">
+          <input class="input" type="text" id="branch" placeholder="Branch" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="cgpa">CGPA / Percentage</label>
+        <div class="control">
+          <input class="input" type="text" id="cgpa" placeholder="CGPA / Percentage" required />
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <label class="label" for="members">Accompanying persons</label>
+        <div class="control">
+          <input class="input" type="number" min="0" id="members" placeholder="In number" required />
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+   <!--  <div class="columns">
+
+       
+  
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="yearOfAdmission">Year of Admission</label>
+        <div class="control">
+          <input class="input" type="number" id="yearOfAdmission" placeholder="Year of Admission" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="yearOfCompletion">Year of Completion</label>
+        <div class="control">
+          <input class="input" type="number" id="yearOfCompletion" placeholder="Year of Completion" required />
+        </div>
+      </div>
+    </div>
+  
+    <div class="column">
+      <div class="field">
+        <label class="label" for="universityRegNumber">University Registration Number</label>
+        <div class="control">
+          <input class="input" type="text" id="universityRegNumber" placeholder="Registration Number" required />
+        </div>
+      </div>
+    </div>
+  </div>
+   -->
+
+<!-- Professional Details -->
+
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label" for="employmentStatus">Current Employment Status</label>
+      <div class="control">
+        <input class="input" type="text" id="employmentStatus" placeholder="Employed / Self-Employed / Higher Studies / Unemployed" required />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="companyName">Company / Organization Name (if employed)</label>
+      <div class="control">
+        <input class="input" type="text" id="companyName" placeholder="Company Name" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="designation">Designation</label>
+      <div class="control">
+        <input class="input" type="text" id="designation" placeholder="Designation" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="workLocation">Work Location (City, Country)</label>
+      <div class="control">
+        <input class="input" type="text" id="workLocation" placeholder="City, Country" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="field">
+      <label class="label" for="industry">Industry / Sector</label>
+      <div class="control">
+        <input class="input" type="text" id="industry" placeholder="Industry / Sector" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="experience">Years of Experience</label>
+      <div class="control">
+        <input class="input" type="number" min="0" id="experience" placeholder="Years of Experience" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="professionalEmail">Professional Email ID</label>
+      <div class="control">
+        <input class="input" type="email" id="professionalEmail" placeholder="Email ID" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="linkedin">LinkedIn Profile (if available)</label>
+      <div class="control">
+        <input class="input" type="url" id="linkedin" placeholder="LinkedIn Profile URL" />
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="field">
+      <label class="label" for="furtherStudies">Further Studies (if applicable)</label>
+      <div class="control">
+        <input class="input" type="text" id="furtherStudies" placeholder="University & Course" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+                  <!-- Declaration -->
+                  <div class="field">
+                    <div class="control">
+                      <label class="checkbox">
+                        <input type="checkbox" id="declaration" required />
+                        I confirm that all the details provided are correct to the best of my knowledge.
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                      <button type="submit" class="button is-primary is-large submit-btn">Submit</button>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const apiUrl = "https://script.google.com/macros/s/AKfycbycJ5ZWtG12XnCktKcNPctl-H8VPMW24lQDceZ0wq6cFWx_C1C-PmxLMXe-nn0wGN3Enw/exec";
+      let isSubmitting = false; // Flag to prevent multiple submissions
+
+      // Show loading spinner
+      function showLoading() {
+        $("#loading").show();
+      }
+
+      // Hide loading spinner
+      function hideLoading() {
+        $("#loading").hide();
+      }
+
+
+
+      // Handle form submission
+      $("#convocationForm").on("submit", function (e) {
+        e.preventDefault();
+
+        if (isSubmitting) return; // Prevent multiple submissions
+        isSubmitting = true;
+
+        // Disable submit button
+        const submitBtn = $(".submit-btn");
+        submitBtn.prop("disabled", true);
+
+        const formData = {
+          fullName: $("#fullName").val(),
+          studentId: $("#studentId").val(),
+          dob: $("#dob").val(),
+          gender: $("input[name='gender']:checked").val(),
+          email: $("#email").val(),
+          phoneNumber: parseInt($("#phoneNumber").val()),
+          alternatePhoneNumber: $("#alternatePhoneNumber").val(),
+          aadhaarNumber: $("#aadhaarNumber").val(),
+          collegeName: $("#collegeName").val(),
+          degree: $("#degree").val(),
+          branch: $("#branch").val(),
+          cgpa: $("#cgpa").val(),
+          members: $("#members").val(),
+         // yearOfAdmission: $("#yearOfAdmission").val(),
+         // yearOfCompletion: $("#yearOfCompletion").val(),
+         // universityRegNumber: $("#universityRegNumber").val(),
+        
+          // Professional Details
+          employmentStatus: $("#employmentStatus").val() || "",
+          companyName: $("#companyName").val() || "",
+          designation: $("#designation").val() || "",
+          workLocation: $("#workLocation").val() || "",
+          industry: $("#industry").val() || "",
+          experience: parseInt($("#experience").val()) || "",
+          professionalEmail: $("#professionalEmail").val() || "",
+          linkedin: $("#linkedin").val() || "",
+          furtherStudies: $("#furtherStudies").val() || "",
+        };
+        
+
+        $.getJSON(
+          apiUrl + "?action=add&callback=?&data=" + encodeURIComponent(JSON.stringify(formData)),
+          function (response) {
+            if (response.success) {
+              // Update success message and show it
+              $("#successMessage").html("Form submitted successfully!").show();
+              $("#errorMessage").hide();
+              // Optionally, you can refresh the data or trigger any additional logic here
+              downloadData(formData); // For downloading updated data, as per your code
+            } else if (response.message === "Phone Number already exists.") {
+              // Show specific error message for Aadhaar number already exists
+              $("#errorMessage").html("Phone Number already exists.").show();
+              $("#successMessage").hide();
+            } 
+             else if (response.message === "Aadhaar Number already exists.") {
+              // Show specific error message for Aadhaar number already exists
+              $("#errorMessage").html("Aadhaar Number already exists.").show();
+              $("#successMessage").hide(); }
+             else if (response.message === "Email already exists.") {
+              // Show specific error message for Aadhaar number already exists
+              $("#errorMessage").html(" Email already exists.").show();
+              $("#successMessage").hide(); }
+               else {
+              // Show general error message
+              $("#errorMessage").html("Failed to submit the form. Please try again.").show();
+              $("#successMessage").hide();
+            }
+            
+          
+            isSubmitting = false; // Reset flag
+            submitBtn.prop("disabled", false); // Re-enable submit button
+          }
+        ).fail(function () {
+          $("#errorMessage").show();
+          $("#successMessage").hide();
+          isSubmitting = false; // Reset flag
+          submitBtn.prop("disabled", false); // Re-enable submit button
+        });
+      });
+      function downloadData(formData) {
+        var keyMap = {
+          "fullName": "Full Name",
+          "studentId": "Student ID",
+          "dob": "Date of Birth",
+          "gender": "Gender",
+          "email": "Email",
+          "phoneNumber": "Phone Number",
+          "alternatePhoneNumber": "Alternate Phone Number",
+          "aadhaarNumber": "Aadhaar Number",
+          "collegeName": "College Name",
+          "degree": "Degree",
+          "branch": "Branch",
+          "cgpa": "CGPA",
+          "members": "Accompanying persons",
+     
+          "employmentStatus": "Current Employment Status",
+          "companyName": "Company / Organization Name",
+          "designation": "Designation",
+          "workLocation": "Work Location",
+          "industry": "Industry / Sector",
+          "experience": "Years of Experience",
+          "professionalEmail": "Professional Email ID",
+          "linkedin": "LinkedIn Profile",
+          "furtherStudies": "Further Studies"
+      };
+      //"yearOfAdmission": "Year of Admission",
+      //"yearOfCompletion": "Year of Completion",
+      //"universityRegNumber": "University Registration Number",
+    
+        if (formData && Object.keys(formData).length > 0) {
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+    
+            // Add a title to the PDF
+            doc.setFontSize(18);
+            doc.text('Registration Details', 14, 20);
+    
+            // Convert JSON data into an array of rows for the table
+            const tableData = Object.keys(formData).map(key => [keyMap[key], formData[key]]);
+    
+            // Add the table using autoTable
+            let finalY = 30; // Start below the title
+            doc.autoTable({
+                startY: finalY,
+                body: tableData,
+                margin: { left: 14, right: 14 },
+                tableWidth: 'auto',
+                styles: {
+                    fontSize: 12,
+                    cellPadding: 5,
+                },
+                didDrawPage: function (data) {
+                    finalY = data.cursor.y; // Get the Y position after the table
+                }
+            });
+    
+            // Add custom text at the bottom of the PDF
+            doc.setFontSize(12);
+            doc.text("You confirm that the above details are correct.", 14, finalY + 10);
+    
+            // Save the PDF with the name "convocation_data.pdf"
+            doc.save('convocation_data.pdf');
+        } else {
+            alert("No data found!");
+        }
+    }
+    
+
+    });
+  </script>
+</body>
+
+</html>
