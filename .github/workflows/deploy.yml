@@ -17,7 +17,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: 172.232.110.246  # Your server IP
-          username: ubuntu       # Change this to your server's user
+          username: root     # Change this to your server's user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /path/to/your/app  # Change this to your app's path
