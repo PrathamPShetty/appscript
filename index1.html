@@ -902,6 +902,8 @@
     $(document).ready(function () {
       //const apiUrl = "https://script.google.com/macros/library/d/1YxQ6GulHBOppG3y3ohSEVDJL9YvIxIRCD08AxEzbBoN6YOxYkv8T_Zp3/1";
    const apiUrl ="https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec";
+
+    const apimongo ="http://localhost:5000/get-sheets";
       const $sheetSelector = $('#sheetSelector');
       const $dataTable = $('#dataTable');
       const $loading = $('#loading');
@@ -916,202 +918,203 @@
 
       let reloadtimeinterval = false;
 
+
       
      
 
-      window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-      // DON'T use "var indexedDB = ..." if you're not in a function.
-      // Moreover, you may need references to some window.IDB* objects:
-      window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
-      window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-      // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+  //     window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+  //     // DON'T use "var indexedDB = ..." if you're not in a function.
+  //     // Moreover, you may need references to some window.IDB* objects:
+  //     window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
+  //     window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+  //     // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
       
-      if ( !window.indexedDB ) {
-        alert("No DB");
-      }
+  //     if ( !window.indexedDB ) {
+  //       alert("No DB");
+  //     }
       
-      const DB_NAME = "MyDatabase";
-      const STORE_NAME = "filteredDataStore";
-      const DB_VERSION = 1;
+  //     const DB_NAME = "MyDatabase";
+  //     const STORE_NAME = "filteredDataStore";
+  //     const DB_VERSION = 1;
       
-      let db; // Global database variable
+  //     let db; // Global database variable
       
-      // Open IndexedDB database once
-      function initDB(callback) {
-          const request = indexedDB.open(DB_NAME, DB_VERSION);
+  //     // Open IndexedDB database once
+  //     function initDB(callback) {
+  //         const request = indexedDB.open(DB_NAME, DB_VERSION);
       
-          request.onupgradeneeded = function (event) {
-              db = event.target.result;
-              if (!db.objectStoreNames.contains(STORE_NAME)) {
-                  db.createObjectStore(STORE_NAME);
-              }
-          };
+  //         request.onupgradeneeded = function (event) {
+  //             db = event.target.result;
+  //             if (!db.objectStoreNames.contains(STORE_NAME)) {
+  //                 db.createObjectStore(STORE_NAME);
+  //             }
+  //         };
       
-          request.onsuccess = function (event) {
-              db = event.target.result;
-              console.log("IndexedDB initialized.");
-              if (callback) callback();
-          };
+  //         request.onsuccess = function (event) {
+  //             db = event.target.result;
+  //             console.log("IndexedDB initialized.");
+  //             if (callback) callback();
+  //         };
       
-          request.onerror = function (event) {
-              console.error("IndexedDB failed to open:", event.target.error);
-          };
-      }
+  //         request.onerror = function (event) {
+  //             console.error("IndexedDB failed to open:", event.target.error);
+  //         };
+  //     }
 
 
 
 
-      initDB(() => {
-        console.log("Database is ready to use.");
+  //     initDB(() => {
+  //       console.log("Database is ready to use.");
     
-        // // Now you can safely call functions like getFilteredData
-        // getFilteredData((filterData) => {
-        //     console.log("Retrieved Data:", filterData);
-        // });
-    });
+  //       // // Now you can safely call functions like getFilteredData
+  //       // getFilteredData((filterData) => {
+  //       //     console.log("Retrieved Data:", filterData);
+  //       // });
+  //   });
 
 
-     function saveFilteredData(filteredData) {
+  //    function saveFilteredData(filteredData) {
              
-      initDB(() => {
-        console.log("Database is ready to use.");
-    });
-          if (!db) {
-              console.error("Database is not initialized yet.");
-              return;
-          }
+  //     initDB(() => {
+  //       console.log("Database is ready to use.");
+  //   });
+  //         if (!db) {
+  //             console.error("Database is not initialized yet.");
+  //             return;
+  //         }
       
-          const transaction = db.transaction(STORE_NAME, "readwrite");
-          const store = transaction.objectStore(STORE_NAME);
-          const request = store.put(filteredData, "filteredData");
+  //         const transaction = db.transaction(STORE_NAME, "readwrite");
+  //         const store = transaction.objectStore(STORE_NAME);
+  //         const request = store.put(filteredData, "filteredData");
       
-          request.onsuccess = function () {
-              console.log("filteredData saved successfully.");
-          };
+  //         request.onsuccess = function () {
+  //             console.log("filteredData saved successfully.");
+  //         };
       
-          request.onerror = function (event) {
-              console.error("Error saving filteredData:", event.target.error);
-          };
-      }
+  //         request.onerror = function (event) {
+  //             console.error("Error saving filteredData:", event.target.error);
+  //         };
+  //     }
       
-      // Retrieve filteredData from IndexedDB
-      function getFilteredData(callback) {
+  //     // Retrieve filteredData from IndexedDB
+  //     function getFilteredData(callback) {
              
-      initDB(() => {
-        console.log("Database is ready to use.");
-    });
-     if (!db) {
-      console.error("Database is not initialized yet.");
-      return;
-  }
+  //     initDB(() => {
+  //       console.log("Database is ready to use.");
+  //   });
+  //    if (!db) {
+  //     console.error("Database is not initialized yet.");
+  //     return;
+  // }
       
-          const transaction = db.transaction(STORE_NAME, "readonly");
-          const store = transaction.objectStore(STORE_NAME);
-          const request = store.get("filteredData");
+  //         const transaction = db.transaction(STORE_NAME, "readonly");
+  //         const store = transaction.objectStore(STORE_NAME);
+  //         const request = store.get("filteredData");
       
-          request.onsuccess = function () {
-            console.log("return all data");
-              callback(request.result || null);
-          };
+  //         request.onsuccess = function () {
+  //           console.log("return all data");
+  //             callback(request.result || null);
+  //         };
       
-          request.onerror = function (event) {
-              console.error("Error retrieving filteredData:", event.target.error);
-          };
-      }
+  //         request.onerror = function (event) {
+  //             console.error("Error retrieving filteredData:", event.target.error);
+  //         };
+  //     }
       
-      // Remove filteredData from IndexedDB
-      function removeFilteredData() {
-          if (!db) {
-              console.error("Database is not initialized yet.");
-              return;
-          }
+  //     // Remove filteredData from IndexedDB
+  //     function removeFilteredData() {
+  //         if (!db) {
+  //             console.error("Database is not initialized yet.");
+  //             return;
+  //         }
       
-          const transaction = db.transaction(STORE_NAME, "readwrite");
-          const store = transaction.objectStore(STORE_NAME);
-          const request = store.delete("filteredData");
+  //         const transaction = db.transaction(STORE_NAME, "readwrite");
+  //         const store = transaction.objectStore(STORE_NAME);
+  //         const request = store.delete("filteredData");
       
-          request.onsuccess = function () {
-              console.log("filteredData removed successfully.");
-          };
+  //         request.onsuccess = function () {
+  //             console.log("filteredData removed successfully.");
+  //         };
       
-          request.onerror = function (event) {
-              console.error("Error removing filteredData:", event.target.error);
-          };
-      }
+  //         request.onerror = function (event) {
+  //             console.error("Error removing filteredData:", event.target.error);
+  //         };
+  //     }
       
-      function firstload() {
-        initDB();
-        let filteredData1;
-        getFilteredData((data) => {
+  //     function firstload() {
+  //       initDB();
+  //       let filteredData1;
+  //       getFilteredData((data) => {
          
-          filteredData1 = data;
-          console.log("in loading", filteredData1);
+  //         filteredData1 = data;
+  //         console.log("in loading  first time ", filteredData1);
 
-        });
+  //       });
 
-          console.log("data on loading"+ filteredData1);
+  //         console.log("data on loading"+ filteredData1);
          
-          if (filteredData1) {
-            let columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'Eligible for CBT', 'Eligible for SUD', 'SUD DX', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
+  //         if (filteredData1) {
+  //           let columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'Eligible for CBT', 'Eligible for SUD', 'SUD DX', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
       
-            // Check if the DataTable is already initialized
-            if ($.fn.dataTable.isDataTable($dataTable)) {
-              dataTableInstance.clear().rows.add(filteredData1).draw(); 
-            } else {
-              // Initialize the DataTable
-              dataTableInstance = $dataTable.DataTable({
-                responsive: false,
-                destroy: true,
-                scrollX: true,
-                data: filteredData1,
-                columns: [
-                  ...columnArray.map(header => ({
-                    data: header,
-                    title: `<span class="large-header" script="min width=142">${header.replace(/_/g, ' ')}</span>`
-                  })),
-                  {
-                    title: 'Actions',
-                    data: null,
-                    orderable: false,
-                    render: function (data, type, row) {
-                      const rowData = encodeURIComponent(JSON.stringify(row));
-                      return localStorage.getItem("selectedSheet").toLowerCase().includes("discharge")
-                        ? `<button class="edit-btn" onclick="reAdmitRow('${rowData}')">Readmit</button>`
-                        : `<div class="action-buttons">
-                            <button class="edit-btn" onclick="editRow('${rowData}')">Edit</button>
-                            <button class="delete-btn" onclick="deleteRow('${rowData}')">Delete</button>
-                          </div>`;
-                    }
-                  }
-                ],
-                paging: true,
-                searching: true,
-                ordering: true,
-                dom: '<"top"f>rt<"bottom"ip>',
-                language: {
-                  search: "Patient Lookup : ",
-                  info: "Showing _TOTAL_ entries",
-                  paginate: {
-                    first: "First",
-                    last: "Last",
-                    next: "Next",
-                    previous: "Previous"
-                  }
-                },
-                pageLength: 100,
-                rowCallback: function (row, data, index) {
-                  const backgroundColor = data['Resident Full Name Background'];
-                  if (backgroundColor) {
-                    const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
-                    cell.css('background-color', backgroundColor);
-                  }
-                }
-              });
-            }
-          }
-      }
+  //           // Check if the DataTable is already initialized
+  //           if ($.fn.dataTable.isDataTable($dataTable)) {
+  //             dataTableInstance.clear().rows.add(filteredData1).draw(); 
+  //           } else {
+  //             // Initialize the DataTable
+  //             dataTableInstance = $dataTable.DataTable({
+  //               responsive: false,
+  //               destroy: true,
+  //               scrollX: true,
+  //               data: filteredData1,
+  //               columns: [
+  //                 ...columnArray.map(header => ({
+  //                   data: header,
+  //                   title: `<span class="large-header" script="min width=142">${header.replace(/_/g, ' ')}</span>`
+  //                 })),
+  //                 {
+  //                   title: 'Actions',
+  //                   data: null,
+  //                   orderable: false,
+  //                   render: function (data, type, row) {
+  //                     const rowData = encodeURIComponent(JSON.stringify(row));
+  //                     return localStorage.getItem("selectedSheet").toLowerCase().includes("discharge")
+  //                       ? `<button class="edit-btn" onclick="reAdmitRow('${rowData}')">Readmit</button>`
+  //                       : `<div class="action-buttons">
+  //                           <button class="edit-btn" onclick="editRow('${rowData}')">Edit</button>
+  //                           <button class="delete-btn" onclick="deleteRow('${rowData}')">Delete</button>
+  //                         </div>`;
+  //                   }
+  //                 }
+  //               ],
+  //               paging: true,
+  //               searching: true,
+  //               ordering: true,
+  //               dom: '<"top"f>rt<"bottom"ip>',
+  //               language: {
+  //                 search: "Patient Lookup : ",
+  //                 info: "Showing _TOTAL_ entries",
+  //                 paginate: {
+  //                   first: "First",
+  //                   last: "Last",
+  //                   next: "Next",
+  //                   previous: "Previous"
+  //                 }
+  //               },
+  //               pageLength: 100,
+  //               rowCallback: function (row, data, index) {
+  //                 const backgroundColor = data['Resident Full Name Background'];
+  //                 if (backgroundColor) {
+  //                   const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
+  //                   cell.css('background-color', backgroundColor);
+  //                 }
+  //               }
+  //             });
+  //           }
+  //         }
+  //     }
       
-      firstload();
+  //     firstload();
 
       $isDischarge.change(function (e) {
         const isDischargeMode = e.target.value == 1; // Check if discharge mode is active
@@ -1202,9 +1205,9 @@
       showLoading();
 
 
-      $.getJSON(apiUrl, function (data) {
+      $.getJSON(apimongo, function (data) {
         hideLoading();
-       // console.log(data)
+      //  console.log(data);
         if (data && data.length > 0) {
           sheetsData = data;
           const savedSheet = localStorage.getItem('selectedSheet');
@@ -1222,26 +1225,28 @@
   
 
       function fetchData() {
-        $.getJSON(apiUrl, function (data) {
-          //console.log(data);
-          if (data && data.length > 0) {
-            sheetsData = data;
-            const savedSheet = localStorage.getItem('selectedSheet');
-            populateSheetDropdown(data, savedSheet);
-            const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === savedSheet) || data[0];
-            loadSheetData(selectedSheet);
-            reloadtimeinterval = true;
-            //console.log(reloadtimeinterval);
-          } else {
-            reloadtimeinterval = true;
-            //console.log(reloadtimeinterval);
-            alert("No data found!");
-          }
-        }).fail(function (e) {
-          
-          console.log(e);
-          alert("Failed to fetch data from the API.");
-        });
+     
+          $.getJSON("http://localhost:5000/fetchData", function (data) {
+            console.log(data);
+            if (data && data.length > 0) {
+              sheetsData = data;
+              const savedSheet = localStorage.getItem('selectedSheet');
+              populateSheetDropdown(data, savedSheet);
+              const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === savedSheet) || data[0];
+              loadSheetData(selectedSheet);
+              reloadtimeinterval = true;
+              //console.log(reloadtimeinterval);
+            } else {
+              reloadtimeinterval = true;
+              //console.log(reloadtimeinterval);
+              alert("No data found!");
+            }
+          }).fail(function (e) {
+            
+            console.log(e);
+            alert("Failed to fetch data from the API.");
+          });  
+        
       }
       
       function fetchDataConditionally() {
@@ -1323,11 +1328,11 @@
 // }
 
 
-        saveFilteredData(filteredData);
-        getFilteredData((data) => {
-          filteredData = data;
-          console.log("in loading"+filteredData)
-        });
+        // saveFilteredData(filteredData);
+        // getFilteredData((data) => {
+        //   filteredData = data;
+        //   console.log("in loading"+filteredData)
+        // });
 
       
         const uniqueRoomNumbers = new Set();
@@ -1521,10 +1526,11 @@
           .done( async function (response) {
             console.log(response)
             if (response.success) {
+              await fetchData();
               modal.style.display = "none";  // Ensure 'modal' is correctly defined
               addForm.reset();  // Ensure 'addForm' is correctly defined
             //  window.location.reload();
-              await fetchData();
+           
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
             } else {
@@ -1575,10 +1581,11 @@
           .done(async function (response) {
             console.log(response)
             if (response.success) {
-              alert("Readmitted successfully!");
+              await fetchData();
+             
               dataTableInstance.row(rowIndex).remove().draw(false);
               // window.location.reload();
-              await fetchData();
+              alert("Readmitted successfully!");
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
             } else {
@@ -1680,10 +1687,11 @@
             "&callback=?")
             .done( async function (response) {
               if (response.success) {
-                alert("Row updated successfully!");
+                await fetchData();
+               
                 dataTableInstance.row(rowIndex).data(updatedData).draw(false);
                 // window.location.reload();
-                await fetchData();
+                alert("Row updated successfully!");
                 reloadtimeinterval = true;
                 //console.log(reloadtimeinterval);
               } else {
@@ -1778,13 +1786,16 @@
           .done(async function (response) {
             console.log('response' + response)
             if (response) {
-          
-              alert("Row deleted successfully!");
+              
+              await fetchData();
+             
               // window.location.reload();
             
               dataTableInstance.row(rowIndex).remove().draw(false); // Remove row from DataTable
 
-              await fetchData();
+             
+
+              alert("Row deleted successfully!");
 
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
