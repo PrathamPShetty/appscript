@@ -89,6 +89,7 @@ async function fetchAndStoreData() {
 // Fetch Data from MongoDB
 app.get("/get-sheets", async (req, res) => {
   try {
+    console.log("Api Fetching data...");
     const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
 
     res.json(sheets);
