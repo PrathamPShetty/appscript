@@ -19,6 +19,8 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 172.232.110.246 >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add ~/.ssh/id_rsa
 
       - name: Set up SSH and Deploy
         uses: appleboy/ssh-action@master
