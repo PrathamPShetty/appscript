@@ -10,14 +10,10 @@ app.use(express.json());
 
 
 app.use((req, res, next) => {
-    res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Headers": "'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'",
-    });
-
+    res.header('Access-Control-Allow-Origin', '*');
     next();
 });
+
 
 
 
@@ -96,14 +92,14 @@ async function fetchAndStoreData() {
   }); 
 
 // Fetch Data from MongoDB
-app.get('/get-sheets', (req, res) => {
-    request('http://register.mcceducare.com/get-sheets', (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-            res.send(body);
-        } else {
-            res.status(response.statusCode).send(error);
-        }
-    });
+app.get("/get-sheets", async (req, res) => {
+  try {
+    const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
+
+    res.json(sheets);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching data", error: error.message });
+  }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.listen(7001, () => console.log("Server running on port 5000"));

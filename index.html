@@ -1013,7 +1013,7 @@
       showLoading();
 
 
-      $.getJSON(apimongo, function (data) {
+      $.getJSON('http://register.mcceducare.com/get-sheets', function (data) {
         hideLoading();
       //  console.log(data);
         if (data && data.length > 0) {
@@ -1034,7 +1034,7 @@
 
       function fetchData() {
      
-          $.getJSON(apifetch, function (data) {
+          $.getJSON('http://register.mcceducare.com/get-sheets?callback=handleResponse', function (data) {
             console.log(data);
             if (data && data.length > 0) {
               sheetsData = data;
