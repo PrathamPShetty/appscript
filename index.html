@@ -903,8 +903,8 @@
       //const apiUrl = "https://script.google.com/macros/library/d/1YxQ6GulHBOppG3y3ohSEVDJL9YvIxIRCD08AxEzbBoN6YOxYkv8T_Zp3/1";
    const apiUrl ="https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec";
 
-    const apimongo ="http://register.mcceducare.com/get-sheets";
-    const apifetch ="http://register.mcceducare.com/fetchData";
+    const apimongo ="http://172.232.110.246:7001/get-sheets";
+    const apifetch ="http://172.232.110.246:7001/fetchData";
       const $sheetSelector = $('#sheetSelector');
       const $dataTable = $('#dataTable');
       const $loading = $('#loading');
@@ -1013,7 +1013,7 @@
       showLoading();
 
 
-      $.getJSON('http://172.232.110.246:7001/get-sheets', function (data) {
+      $.getJSON(apimongo, function (data) {
         hideLoading();
       //  console.log(data);
         if (data && data.length > 0) {
