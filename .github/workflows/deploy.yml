@@ -20,7 +20,7 @@ jobs:
           username: root     # Change this to your server's user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /path/to/your/app  # Change this to your app's path
+            cd /var/www/html/appscript/  # Change this to your app's path
             git pull origin main
             npm install
             pm2 stop server || true  
