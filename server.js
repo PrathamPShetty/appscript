@@ -9,6 +9,14 @@ app.use(cors());
 app.use(express.json());
 
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+
+
+
 mongoose.connect("mongodb+srv://Pratham99sai:Pratham99sai@pratham.cwnip.mongodb.net/sheet?retryWrites=true&w=majority&appName=Pratham", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -84,14 +92,14 @@ async function fetchAndStoreData() {
   }); 
 
 // Fetch Data from MongoDB
-app.get("/get-sheets", async (req, res) => {
-  try {
-    const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
-
-    res.json(sheets);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching data", error: error.message });
-  }
+app.get('/get-sheets', (req, res) => {
+    request('http://register.mcceducare.com/get-sheets', (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        } else {
+            res.status(response.statusCode).send(error);
+        }
+    });
 });
 
 app.listen(5000, () => console.log("Server running on port 5000"));
