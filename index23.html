@@ -188,7 +188,6 @@
       border: 1px solid #ddd;
     }
 
-
     .dataTables_paginate .paginate_button.current {
       background: #2c3e50 !important;
       color: white !important;
@@ -702,16 +701,6 @@
           <select id="unitFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 50%;">
           </select>
         </div>
-
-        <div class="filter-group" style="flex: 1 1 200px;">
-          <label for="colorFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">Color Filter:</label>
-          <select id="colorFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 50%;">
-              <option value="">All Color</option>
-              <option value="Red">Red</option>
-              <option value="Purple">Purple</option>
-              <option value="White">White</option>
-          </select>
-        </div>
       
         <!-- BIMS Filter -->
         <div class="filter-group" style="flex: 1 1 200px;">
@@ -769,11 +758,11 @@
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
           <label>
-              <input type="radio" name="color" value="#ff0000"> Red
+              <input type="radio" name="color" value="red"> Red
           </label>
       
           <label>
-              <input type="radio" name="color" value="#d9d2e9"> Purple
+              <input type="radio" name="color" value="purple"> Purple
           </label>
       
           <label>
@@ -834,25 +823,20 @@
         </div>
         <div class="form-group">
           <label for="biopsychosocialAssessment">Biopsychosocial Assessment:</label>
-          <select id="biopsychosocialAssessment" required>
-            <option value=" ">Select</option>
+          <input type="text" id="biopsychosocialAssessment">
+        </div>
+        <div class="form-group">
+          <label for="eligibleForSUD">Eligible for SUD:</label>
+          <select id="eligibleForSUD" required>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
         </div>
         <div class="form-group">
           <label for="suddx">SUD DX</label>
-          <input type="text" value="NA" id="suddx">
+          <input type="text" id="suddx">
+
         </div>
-        <div class="form-group">
-          <label for="eligibleForSUD">Eligible for SUD:</label>
-          <select id="eligibleForSUD" required>
-            <option value=" ">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-      
         <div class="form-group">
           <label for="lastVisitDate">Last Visit Date:</label>
           <input type="date" id="lastVisitDate" required>
@@ -931,7 +915,6 @@
       const $unitFilter = $('#unitFilter')
       const $bimsFilter = $('#bimsFilter')
       const $isDischarge = $("#isDischarge");
-      const $colorFilter = $('#colorFilter');
       let dataTableInstance;
       let sheetsData = [];
 
@@ -943,8 +926,7 @@
 
 
       $isDischarge.change(function (e) {
-        const isDischargeMode = e.target.value == 1; 
-
+        const isDischargeMode = e.target.value == 1; // Check if discharge mode is active
         $sheetSelector.empty(); // Clear the dropdown
 
         // Filter and populate the dropdown based on the mode
@@ -1053,7 +1035,7 @@
 
       function fetchData() {
      
-          $.getJSON(apimongo, function (data) {
+          $.getJSON('http://register.mcceducare.com/get-sheets?callback=handleResponse', function (data) {
             console.log(data);
             if (data && data.length > 0) {
               sheetsData = data;
@@ -1094,13 +1076,15 @@
         // Determine if we are filtering for "discharge_" sheets
         const isDischargeSheet = sheet_name && sheet_name.toLowerCase().includes("discharge_");
 
+        // Iterate through the data and populate the dropdown
         data.forEach(sheet => {
           const sheetNameLower = sheet.sheet_name.toLowerCase();
 
+          // Check if the sheet should be included based on the sheet_name parameter
           if ((!sheet_name) || (isDischargeSheet && sheetNameLower.includes("discharge_")) || (!isDischargeSheet && !sheetNameLower.includes("discharge_"))) {
-         
+            // Check if this sheet was previously selected
             const isSelected = localStorage.getItem("selectedSheet") === sheet.sheet_name;
-       
+            // Append the option to the dropdown
             $sheetSelector.append(`<option value="${sheet.sheet_name}" ${isSelected ? "selected" : ""}>${sheet.sheet_name}</option>`);
           }
         });
@@ -1125,8 +1109,11 @@
           $alertButton.hide();
         }
       
-        let columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
+        let columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'Eligible for CBT', 'Eligible for SUD', 'SUD DX', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
       
+       // console.log(JSON.stringify(sheet.sheet_data, null, 2)); // Pretty prints the sheetData
+      
+        // Ensure each row has all required columns and filter out completely empty rows
         let filteredData = sheet.sheet_data
           .map(row => {
             let completeRow = {};
@@ -1140,7 +1127,7 @@
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
           })
-          .filter(row => row !== null); 
+          .filter(row => row !== null); // Remove completely empty rows
       
        
 
@@ -1159,8 +1146,7 @@
       
         const uniqueRoomNumbers = new Set();
         const uniqueUnits = new Set();
-   
-  
+      
         // Populate the Sets with unique values from the filtered data
         filteredData.forEach(row => {
           if (row['Room Number']) uniqueRoomNumbers.add(row['Room Number']);
@@ -1169,16 +1155,11 @@
       
         $roomNumberFilter.empty();
         $unitFilter.empty();
-   
-   
-
+        // Append the "All" option to each dropdown
         $roomNumberFilter.append(`<option value="">All</option>`);
         $unitFilter.append(`<option value="">All</option>`);
       
-        
-      
-
-      
+        // Append unique values to the dropdowns
         uniqueRoomNumbers.forEach(roomNumber => {
           $roomNumberFilter.append(`<option value="${roomNumber}">${roomNumber}</option>`);
         });
@@ -1187,13 +1168,13 @@
           $unitFilter.append(`<option value="${unit}">${unit}</option>`);
         });
       
-      
+        // Display stored data from localStorage if available
         const storedData = JSON.parse(localStorage.getItem('filteredData'));
         if (storedData) {
-          filteredData = storedData; 
+          filteredData = storedData; // Use the stored data
         }
       
-       
+        // Initialize or update DataTable
         if ($.fn.dataTable.isDataTable($dataTable)) {
           dataTableInstance.clear().rows.add(filteredData).draw();
         } else {
@@ -1241,7 +1222,6 @@
             rowCallback: function (row, data, index) {
               // Check if the background color is available in the row data
               const backgroundColor = data['Resident Full Name Background'];
-           
               if (backgroundColor) {
                 // Find the "Resident Full Name" cell
                 const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
@@ -1252,40 +1232,7 @@
           });
         }
       }
-
-      $colorFilter.on('change', function() {
-        // Define the columns and color mapping
-        const columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
-        const colorMapping = { "": "", Red: '#ff0000', Purple: '#d9d2e9', White: '#ffffff' };
-    
-        const selectedColor = $(this).val(); // Get the selected color from the dropdown
-        const searchTerm = colorMapping[selectedColor] || selectedColor; // Map color name to hex code, or use as-is
-    
-        dataTableInstance.rows().every(function() {
-            const rowData = this.data();
-            const bgColor = rowData['Resident Full Name Background'];
-    
-     
-    
-            // If the background color matches or if "All Color" is selected
-            if (bgColor && (searchTerm === "" || bgColor === searchTerm)) {
-                // Show the row and apply background color
-                $(this.node()).show();
-                $(this.node()).find('td').eq(columnArray.indexOf('Resident Full Name')).css('background-color', bgColor);
-            } else {
-                // Hide the row if it doesn't match the selected filter
-                $(this.node()).hide();
-            }
-        });
-    
-        // Redraw the table after the filtering process
-        dataTableInstance.draw();
-    });
-    
-    
-    
-    
-    
+      
       $roomNumberFilter.change(function (e) {
         const selectedRoomNumber = e.target.value;
         dataTableInstance.columns(3).search(selectedRoomNumber).draw();
@@ -1296,9 +1243,6 @@
         dataTableInstance.columns(2).search(selectedUnit).draw();
       });
       
-      
-
-
       $bimsFilter.change(function (e) {
         const selectedBims = e.target.value;
         const bimsMapping = {
@@ -1308,12 +1252,8 @@
           "NC": "Not Cognitive", // Exact match for NC
           "": "" // Empty string for "All" (no filter)
         };
-
-       
       
         const searchTerm = bimsMapping[selectedBims] || "";
-
-        console.log(searchTerm);
       
         dataTableInstance.columns(5).search(searchTerm, true, false).draw();
       });
@@ -1361,12 +1301,11 @@
         } else {
           eligible = "Invalid input";
         }
-      
         let eligibleForSUDCBT;
-        if (document.getElementById('suddx').value != 'NA' ) {
-          eligibleForSUDCBT = "No";
-        } else {
+        if (document.getElementById('eligibleForSUD').value === 'Yes' && eligible === 'Yes') {
           eligibleForSUDCBT = "Yes";
+        } else {
+          eligibleForSUDCBT = "No";
         }
         const newData = {
           'PAYER': document.getElementById('payer').value,
@@ -1451,12 +1390,11 @@
           .done(async function (response) {
             console.log(response)
             if (response.success) {
-              alert("Readmitted successfully!");
+              await fetchData();
              
               dataTableInstance.row(rowIndex).remove().draw(false);
               // window.location.reload();
-           
-              await fetchData();
+              alert("Readmitted successfully!");
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
             } else {
@@ -1470,8 +1408,6 @@
           });
       }
 
-
-      
       window.editRow = function (rowData) {
         const row = JSON.parse(decodeURIComponent(rowData));
         reloadtimeinterval = false;
@@ -1500,20 +1436,7 @@
           if (columnName === "Last Visit Date" || columnName === "Prior Auth Expiry Date") {
             // Date input field
             inputElement = `<input type="date" class="edit-input custom-date-input" value="${convertToISODate(currentValue)}">`;
-          } else if (columnName === "Resident Full Name") {
-            // Text input for Resident Full Name
-            inputElement = `<input type="text" class="edit-input" value="${currentValue}">`;
-            
-            // Color dropdown selector with custom CSS class
-            inputElement += `
-                <select class="edit-input custom-drop small-color-picker">
-                    <option value="" ${currentValue === "" ? "selected" : ""}>No Color</option>
-                    <option value="#ffffff" ${currentValue === "#ffffff" ? "selected" : ""}>White</option>
-                    <option value="#ff0000" ${currentValue === "#ff0000" ? "selected" : ""}>Red</option>
-                    <option value="#d9d2e9" ${currentValue === "#d9d2e9" ? "selected" : ""}>Purple</option>
-                </select>
-            `;
-        } else if (columnName === "BIMS score") {
+          } else if (columnName === "BIMS score") {
             // Dropdown for BIMS Score
             inputElement = `<select class="edit-input custom-drop">${generateOptions(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
           } else if (columnName === "Last Visit Type") {
@@ -1557,27 +1480,13 @@
               // If the input field is empty, keep the original value
               if (columnName === "Last Visit Date" || columnName === "Prior Auth Expiry Date") {
                 updatedData[columnName] = newValue ? convertToUSDate(newValue) : row[columnName];
-            } else {
+              } else {
                 updatedData[columnName] = newValue || row[columnName];
-            }
-    
-            // Specifically handle the "Resident Full Name" and its background color
-            if (columnName === "Resident Full Name") {
-                // Get the selected color from the dropdown
-                let selectedColor = rowNode.find('select.small-color-picker').val();
-                console.log(selectedColor);
-    
-                // Save the selected background color in the updated data
-                updatedData["Background"] = selectedColor;
-    
-                // Update the background color of the "Resident Full Name" cell immediately
-                $(this).css('background-color', selectedColor);
-            }
+              }
             }
           });
 
-      
-
+          //console.log("Updated Row Data:", updatedData);
 
           // Send updated data to Google Sheets
           $.getJSON(apiUrl + "?action=update" +
@@ -1587,12 +1496,11 @@
             "&callback=?")
             .done( async function (response) {
               if (response.success) {
-                await alert("Row updated successfully!");
-           
+                await fetchData();
                
                 dataTableInstance.row(rowIndex).data(updatedData).draw(false);
                 // window.location.reload();
-                fetchData();
+                alert("Row updated successfully!");
                 reloadtimeinterval = true;
                 //console.log(reloadtimeinterval);
               } else {
@@ -1688,15 +1596,15 @@
             console.log('response' + response)
             if (response) {
 
-              await alert("Row deleted successfully!");
+              await fetchData();
              
               // window.location.reload();
             
               dataTableInstance.row(rowIndex).remove().draw(false); // Remove row from DataTable
 
-              await fetchData();
+             
 
-       
+              alert("Row deleted successfully!");
 
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
