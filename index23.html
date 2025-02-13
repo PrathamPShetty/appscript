@@ -1627,3 +1627,30 @@
 </body>
 
 </html>
+
+
+
+
+
+
+$.getJSON("http://localhost:7002/editData", {
+  action: "update",
+  sheet_name: $('#sheetSelector').val(),
+  oldData: JSON.stringify(row),
+  newData: JSON.stringify(updatedData)
+})
+.done(async function (response) {
+  if (response.success) {
+      await alert("Row updated successfully!");
+      dataTableInstance.row(rowIndex).data(updatedData).draw(false);
+      fetchData();
+      reloadtimeinterval = true;
+  } else {
+      reloadtimeinterval = true;
+      alert("Failed to update row: " + response.message);
+  }
+})
+.fail(function () {
+  reloadtimeinterval = true;
+  alert("Error: Could not connect to the server.");
+});

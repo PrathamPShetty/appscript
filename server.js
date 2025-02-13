@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-// app.use(cors());
+//app.use(cors());
 app.use(express.json());
 
 
@@ -86,7 +86,58 @@ async function fetchAndStoreData() {
       }
   }); 
 
-// Fetch Data from MongoDB
+//   app.get("/editData", async (req, res) => {
+//     const { action, sheet_name, oldData, newData } = req.query;
+
+//     if (action !== "update") {
+//       return res.status(400).json({ success: false, message: "Invalid action" });
+//     }
+
+//     // Parse oldData and newData from JSON strings
+//     let oldDataParsed, newDataParsed;
+//     try {
+//       oldDataParsed = JSON.parse(oldData);
+//       newDataParsed = JSON.parse(newData);
+//     } catch (error) {
+//       return res.status(400).json({ success: false, message: "Invalid JSON format for oldData or newData" });
+//     }
+
+//     console.log("before Modified oldData:", oldDataParsed);
+//     // Add or modify properties before sending
+//     oldDataParsed["Resident Full Name Background"] = oldDataParsed["Background"];
+//     delete oldDataParsed["Background"];
+
+//     console.log("Modified oldData:", oldDataParsed);
+
+//     try {
+//       console.log("Updating sheet:", sheet_name);
+
+//       // Construct API URL with encoded JSON
+//       const apiUrl = `https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec?action=update` +
+//         `&sheet_name=${encodeURIComponent(sheet_name)}` +
+//         `&oldData=${encodeURIComponent(JSON.stringify(oldDataParsed))}` +
+//         `&newData=${encodeURIComponent(JSON.stringify(newDataParsed))}`;
+
+//       const response = await axios.get(apiUrl);
+//       const data = response.data;
+
+//       if (!data) {
+//         console.log("No data found from Google Sheets!");
+//         return res.status(404).json({ success: false, message: "No data found from Google Sheets!" });
+//       }
+
+      
+      
+     
+//       res.json({ success: true, message: "Row updated successfully!" });
+
+//     } catch (error) {
+//       console.error("Error updating data:", error.message);
+//       res.status(500).json({ success: false, message: "Error updating data: " + error.message });
+//     }
+// });
+
+
 app.get("/get-sheets", async (req, res) => {
   try {
     console.log("Api Fetching data...");

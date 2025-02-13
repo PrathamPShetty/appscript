@@ -789,6 +789,7 @@
         <div class="form-group">
           <label for="bimsScore">BIMS score:</label>
           <select id="bimsScore" required>
+            <option value=" ">Select</option>
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -1302,7 +1303,7 @@
       $bimsFilter.change(function (e) {
         const selectedBims = e.target.value;
         const bimsMapping = {
-          "0-7": "0|1|2|3|4|5|6|7", // Regex to match values 0 to 7
+          "0-7": "0|1|2|3|4|5|6|7"
           "8-15": "8|9|10|11|12|13|14|15", // Regex to match values 8 to 15
           "99": "99", // Exact match for 99
           "NC": "Not Cognitive", // Exact match for NC
@@ -1315,7 +1316,8 @@
 
         console.log(searchTerm);
       
-        dataTableInstance.columns(5).search(searchTerm, true, false).draw();
+        dataTableInstance.columns(5).search('^' + searchTerm + '$', true, false).draw();
+
       });
       
 
