@@ -3,7 +3,7 @@ name: Deploy Node.js App
 on:
   push:
     branches:
-      - main
+      - ${{ secrets.BRANCH }}
 
 jobs:
   deploy:
@@ -18,15 +18,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 172.232.110.246 >> ~/.ssh/known_hosts
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H  ${{ secrets.HOST}} >> ~/.ssh/known_hosts
+      
 
       - name: Set up SSH and Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: 172.232.110.246  # Your server IP
-          username: root     # Change this to your server's user
+          host: ${{ secrets.HOST}}  # Your server IP
+          username: ${{ secrets.USER}}     # Change this to your server's user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/html/appscript/  # Change this to your app's path
