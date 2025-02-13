@@ -758,11 +758,11 @@
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
           <label>
-              <input type="radio" name="color" value="red"> Red
+              <input type="radio" name="color" value="#ff0000"> Red
           </label>
       
           <label>
-              <input type="radio" name="color" value="purple"> Purple
+              <input type="radio" name="color" value="#d9d2e9"> Purple
           </label>
       
           <label>
@@ -1035,7 +1035,7 @@
 
       function fetchData() {
      
-          $.getJSON('http://register.mcceducare.com/get-sheets?callback=handleResponse', function (data) {
+          $.getJSON(apimongo, function (data) {
             console.log(data);
             if (data && data.length > 0) {
               sheetsData = data;
@@ -1222,6 +1222,7 @@
             rowCallback: function (row, data, index) {
               // Check if the background color is available in the row data
               const backgroundColor = data['Resident Full Name Background'];
+              console.log(backgroundColor);
               if (backgroundColor) {
                 // Find the "Resident Full Name" cell
                 const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
