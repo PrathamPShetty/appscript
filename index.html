@@ -718,7 +718,13 @@
           <label for="bimsFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">BIMS Filter:</label>
           <select id="bimsFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 10%;">
             <option value="">All</option>
-            <option value="0-7">0-7</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6-7">6-7</option>
             <option value="99">99</option>
             <option value="NC">Not Cognitive</option>
             <option value="8-15">8-15</option>
@@ -813,6 +819,7 @@
         <div class="form-group">
           <label for="LastVisitType">Last visit Type:</label>
           <select id="LastVisitType" required>
+            <option value=" ">Select</option>
             <option value="Biopsych Assessment">Biopsych Assessment</option>
             <option value="CBT/ Psychotherapy">CBT/ Psychotherapy</option>
             <option value="Full Cognitive Exam">Full Cognitive Exam</option>
@@ -843,7 +850,7 @@
         </div>
         <div class="form-group">
           <label for="suddx">SUD DX</label>
-          <input type="text" value="NA" id="suddx">
+          <input type="text" value=" " id="suddx">
         </div>
         <div class="form-group">
           <label for="eligibleForSUD">Eligible for SUD:</label>
@@ -1303,7 +1310,13 @@
       $bimsFilter.change(function (e) {
         const selectedBims = e.target.value;
         const bimsMapping = {
-          "0-7": "0|1|2|3|4|5|6|7",
+          "0": "0",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6-7": "6|7",
           "8-15": "8|9|10|11|12|13|14|15", // Regex to match values 8 to 15
           "99": "99", // Exact match for 99
           "NC": "Not Cognitive", // Exact match for NC
