@@ -781,7 +781,7 @@
           </label>
       
           <label>
-              <input type="radio" name="color" value="white"> White 
+              <input type="radio" name="color" value="white" checked> White 
           </label>
       </div>
       
@@ -886,6 +886,26 @@
     </div>
   </div>
 
+  <!-- <div id="sheetFormModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add New Entry</h2>
+      <form id="sheetForm">
+  
+        <div class="form-group">
+          <label for="newsheet">Sheet Name</label>
+          <input type="text" id="newsheet" required value="Default Value">
+        </div>
+
+        <div class="form-buttons">
+          <span class="wait-message">Please wait...</span>
+          <button type="submit" class="submit-btn">Submit</button>
+          <button type="button" class="cancel-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div> -->
+
   <div id="alertTables" class="modal">
     <div class="modal-content">
       <span class="close" id="alertTableClose">&times;</span>
@@ -902,6 +922,7 @@
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
   <style>
@@ -929,7 +950,7 @@
      
    const apiUrl ="https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec";
 
-    const apimongo ="http://backend.mcceducare.com/get-sheets";
+    const apimongo ="http://localhost:7002/get-sheets";
     const apifetch ="http://backend.mcceducare.com/fetchData";
       const $sheetSelector = $('#sheetSelector');
       const $dataTable = $('#dataTable');
@@ -1359,6 +1380,65 @@
         }
       }
 
+
+
+    //   document.querySelector('.close').onclick = () => {
+    //   document.getElementById('sheetFormModal').style.display = 'none';
+    // };
+
+    // // Cancel Button
+    // document.querySelector('.cancel-btn').onclick = () => {
+    //   document.getElementById('sheetFormModal').style.display = 'none';
+    //   document.getElementById('sheetForm').reset();
+    // };
+
+    // // AJAX Form Submission
+    // document.getElementById('sheetForm').onsubmit = function (e) {
+    //   e.preventDefault();
+    //   reloadtimeinterval = false;
+
+    //   const waitMessage = document.querySelector('.wait-message');
+    //   const submitBtn = document.querySelector('.submit-btn');
+    //   waitMessage.style.display = 'inline';
+    //   submitBtn.disabled = true;
+    //   submitBtn.style.opacity = '0.7';
+
+    //   let data = {
+    //     "sheetName": document.getElementById('newsheet').value
+    //   };
+
+    //   $.ajax({
+    //     url: "http://localhost:7002/addSheet",
+    //     type: "POST",
+    //     contentType: "application/json",
+    //     data: JSON.stringify({ data }),
+    //     success: function (response) {
+    //       console.log(response);
+    //       waitMessage.style.display = 'none';
+    //       submitBtn.disabled = false;
+    //       submitBtn.style.opacity = '1';
+
+    //       if (response.success) {
+    //         alert('Sheet added successfully!');
+    //         document.getElementById('sheetFormModal').style.display = 'none';
+    //         document.getElementById('sheetForm').reset();
+    //         reloadtimeinterval = true;
+    //       } else {
+    //         alert('Failed to add new entry: ' + response.message);
+    //         reloadtimeinterval = true;
+    //       }
+    //     },
+    //     error: function () {
+    //       alert('Failed to connect to the server. Please try again.');
+    //       waitMessage.style.display = 'none';
+    //       submitBtn.disabled = false;
+    //       submitBtn.style.opacity = '1';
+    //       reloadtimeinterval = true;
+    //     }
+    //   });
+    // };
+
+
       addForm.onsubmit = function (e) {
         e.preventDefault();
         reloadtimeinterval = false;
@@ -1394,7 +1474,7 @@
           'Prior Auth Expiry Date': document.getElementById('expiry').value.split("-").reverse().join("/"),
           'Unit': document.getElementById('unit').value,
           'Room Number': document.getElementById('roomNumber').value,
-          'Color': document.querySelector('input[name="color"]:checked')?.value || "", 
+          'Resident Full Name Background': document.querySelector('input[name="color"]:checked')?.value, 
           'Resident Full Name': document.getElementById('residentFullName').value,
           'BIMS score': document.getElementById('bimsScore').value,
           'Eligible for CBT': eligible,
@@ -1410,43 +1490,81 @@
       //  console.log(newData);
        // console.log(newData.Color);
 
-        $.getJSON(apiUrl + "?action=add" +
-          "&sheet_name=" + encodeURIComponent($('#sheetSelector').val()) +
-          "&data=" + encodeURIComponent(JSON.stringify(newData)) +
-          "&callback=?")
-          .done( async function (response) {
-            console.log(response)
-            if (response.success) {
-              await fetchData();
-              modal.style.display = "none";  // Ensure 'modal' is correctly defined
-              addForm.reset();  // Ensure 'addForm' is correctly defined
-            //  window.location.reload();
+      // $.getJSON(apiUrl + "?action=add" +
+      //     "&sheet_name=" + encodeURIComponent($('#sheetSelector').val()) +
+      //     "&data=" + encodeURIComponent(JSON.stringify(newData)) +
+      //     "&callback=?")
+      //     .done( async function (response) {
+      //       console.log(response)
+      //       if (response.success) {
+          
+      //         modal.style.display = "none";  
+      //         addForm.reset();  
+         
            
-              reloadtimeinterval = true;
-              //console.log(reloadtimeinterval);
-            } else {
-              alert('Failed to add new entry: ' + response.message);
-              // Reset wait message and submit button on failure
-              waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
-              submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
-              submitBtn.style.opacity = '1';
-              reloadtimeinterval = true;
-            }
-          })
-          .fail(function () {
-            alert('Failed to connect to the server. Please try again.');
-            // Reset wait message and submit button on failure
-            waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
-            submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
+      //         reloadtimeinterval = true;
+         
+      //       } else {
+      //         alert('Failed to add new entry: ' + response.message);
+      //         // Reset wait message and submit button on failure
+      //         waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
+      //         submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
+      //         submitBtn.style.opacity = '1';
+      //         reloadtimeinterval = true;
+      //       }
+      //     })
+      //     .fail(function () {
+      //       alert('Failed to connect to the server. Please try again.');
+      //       // Reset wait message and submit button on failure
+      //       waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
+      //       submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
+      //       submitBtn.style.opacity = '1';
+      //       reloadtimeinterval = true;
+      //     });
+      // }
+      // document.querySelector('.cancel-btn').onclick = function () {
+      //   modal.style.display = "none";
+      //   addForm.reset(); // Reset form when cancelled
+      // } 
+
+
+      $.ajax({
+        url: "http://localhost:7002/addData",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          sheet_name: $('#sheetSelector').val(),
+          data: newData
+        }),
+        success: async function (response) {
+          console.log(response);
+          if (response.success) {
+            modal.style.display = "none";
+            addForm.reset();
+            reloadtimeinterval = true;
+          } else {
+            alert('Failed to add new entry: ' + response.message);
+            waitMessage.style.display = 'none';
+            submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
             reloadtimeinterval = true;
-          });
-      }
+          }
+        },
+        error: function () {
+          alert('Failed to connect to the server. Please try again.');
+          waitMessage.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          reloadtimeinterval = true;
+        }
+      });
+    
       document.querySelector('.cancel-btn').onclick = function () {
         modal.style.display = "none";
-        addForm.reset(); // Reset form when cancelled
-      }
-
+        addForm.reset();
+      };
+      
+    }
 
 
 
