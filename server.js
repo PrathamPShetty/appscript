@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 
@@ -53,10 +53,10 @@ async function fetchAndStoreData() {
     }
   }
   
-  // Call Function Every 5 Seconds (5000ms)
-  setInterval(fetchAndStoreData, 20000);
+
+  setInterval(fetchAndStoreData, 200000);
   
-  // API Endpoint to Manually Fetch and Store Data
+
   app.get("/fetchData", async (req, res) => {
     try {
         console.log("Api Fetching data...");

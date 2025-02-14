@@ -717,17 +717,14 @@
         <div class="filter-group" style="flex: 1 1 200px;">
           <label for="bimsFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">BIMS Filter:</label>
           <select id="bimsFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 10%;">
-            <option value="">All</option>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6-7">6-7</option>
+            <option value="">Select</option>
+            <option value="null">Null</option>
+           
+            <option value="0-7">0-7</option>
+            <option value="8-15">8-15</option>
             <option value="99">99</option>
             <option value="NC">Not Cognitive</option>
-            <option value="8-15">8-15</option>
+           
           </select>
         </div>
       
@@ -759,11 +756,11 @@
       <form id="addForm">
         <div class="form-group">
           <label for="payer">Payer:</label>
-          <input type="text" id="payer" required>
+          <input type="text" id="payer" >
         </div>
         <div class="form-group">
           <label for="expiry">Prior Auth Expiry Date:</label>
-          <input type="date" id="expiry" required>
+          <input type="date" id="expiry" >
         </div>
         <div class="form-group">
           <label for="unit">Unit:</label>
@@ -790,11 +787,11 @@
       <br>
         <div class="form-group">
           <label for="residentFullName">Resident Full Name:</label>
-          <input type="text" id="residentFullName">
+          <input type="text" id="residentFullName" required>
         </div>
         <div class="form-group">
           <label for="bimsScore">BIMS score:</label>
-          <select id="bimsScore" required>
+          <select id="bimsScore" >
             <option value=" ">Select</option>
             <option value="0">0</option>
             <option value="1">1</option>
@@ -816,9 +813,31 @@
             <option value="Not Cognitive">Not Cognitive</option>
           </select>
         </div>
+        
+        <div class="form-group">
+          <label for="biopsychosocialAssessment">Biopsychosocial Assessment:</label>
+          <select id="biopsychosocialAssessment">
+            <option value=" ">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="suddx">SUD DX</label>
+          <input type="text"  id="suddx">
+        </div>
+        <div class="form-group">
+          <label for="eligibleForSUD">Eligible for SUD:</label>
+          <select id="eligibleForSUD" >
+            <option value=" ">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <label for="LastVisitType">Last visit Type:</label>
-          <select id="LastVisitType" required>
+          <select id="LastVisitType" >
             <option value=" ">Select</option>
             <option value="Biopsych Assessment">Biopsych Assessment</option>
             <option value="CBT/ Psychotherapy">CBT/ Psychotherapy</option>
@@ -840,30 +859,10 @@
             <option value="PHP CBT">PHP CBT</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="biopsychosocialAssessment">Biopsychosocial Assessment:</label>
-          <select id="biopsychosocialAssessment" required>
-            <option value=" ">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="suddx">SUD DX</label>
-          <input type="text" value=" " id="suddx">
-        </div>
-        <div class="form-group">
-          <label for="eligibleForSUD">Eligible for SUD:</label>
-          <select id="eligibleForSUD" required>
-            <option value=" ">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
       
         <div class="form-group">
           <label for="lastVisitDate">Last Visit Date:</label>
-          <input type="date" id="lastVisitDate" required>
+          <input type="date" id="lastVisitDate" >
         </div>
         <div class="form-group">
           <label for="programs">Programs:</label>
@@ -925,11 +924,11 @@
 
 
     $(document).ready(function () {
-      //const apiUrl = "https://script.google.com/macros/library/d/1YxQ6GulHBOppG3y3ohSEVDJL9YvIxIRCD08AxEzbBoN6YOxYkv8T_Zp3/1";
+     
    const apiUrl ="https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec";
 
-    const apimongo ="http://backend.mcceducare.com/get-sheets";
-    const apifetch ="http://backend.mcceducare.com/fetchData";
+    const apimongo ="http://localhost:7002/get-sheets";
+    const apifetch ="http://localhost:7002/fetchData";
       const $sheetSelector = $('#sheetSelector');
       const $dataTable = $('#dataTable');
       const $loading = $('#loading');
@@ -1074,7 +1073,7 @@
             } else {
               reloadtimeinterval = true;
               //console.log(reloadtimeinterval);
-              alert("No data found!");
+             // alert("No data found!");
             }
           }).fail(function (e) {
             
@@ -1310,17 +1309,12 @@
       $bimsFilter.change(function (e) {
         const selectedBims = e.target.value;
         const bimsMapping = {
-          "0": "0",
-          "1": "1",
-          "2": "2",
-          "3": "3",
-          "4": "4",
-          "5": "5",
-          "6-7": "6|7",
+      
+          "0-7": "^0$|^1$|^2$|^3$|^4$|^5$|^6$|^7$",
           "8-15": "8|9|10|11|12|13|14|15", // Regex to match values 8 to 15
           "99": "99", // Exact match for 99
           "NC": "Not Cognitive", // Exact match for NC
-          "": "" // Empty string for "All" (no filter)
+          "null": "" // Empty string for "All" (no filter)
         };
 
        
@@ -1530,18 +1524,18 @@
             `;
         } else if (columnName === "BIMS score") {
             // Dropdown for BIMS Score
-            inputElement = `<select class="edit-input custom-drop">${generateOptions(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
+            inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
           } else if (columnName === "Last Visit Type") {
             // Dropdown for Last Visit Type
             inputElement = `<select class="edit-input custom-drop">${generateOptions([
-              "Biopsych Assessment", "CBT/ Psychotherapy", "Full Cognitive Exam", "Initial Med Visit",
+             "Select", "Biopsych Assessment", "CBT/ Psychotherapy", "Full Cognitive Exam", "Initial Med Visit",
               "Followup Med Visit", "Consult", "Pain Management", "SUD/Biopsychosocial assessment",
               "SUD/Med Visit", "SUD Intake", "SUD/CBT", "SUD Follow-up", "SUD Consult", "Initial Psych",
               "IOP Group Therapy", "IOP CBT", "PHP Group Therapy", "PHP CBT"
             ], currentValue)}</select>`;
           } else if (columnName === "Programs") {
             // Dropdown for Programs
-            inputElement = `<select class="edit-input custom-drop">${generateOptions(["PRP-Completed", "IOP-Completed", "PHP-Completed", "PRP-Approved", "IOP-Approved", "PHP-Approved"], currentValue)}</select>`;
+            inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","PRP-Completed", "IOP-Completed", "PHP-Completed", "PRP-Approved", "IOP-Approved", "PHP-Approved"], currentValue)}</select>`;
           } else if (columnName !== "Actions") {
             // Default text input
             inputElement = `<input type="text" class="edit-input" value="${currentValue}">`;
