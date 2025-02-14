@@ -31,26 +31,63 @@ const sheetSchema = new mongoose.Schema({
 
 const Sheet = mongoose.model("Sheet", sheetSchema);
 
-async function fetchAndStoreData() {
-    try {
-      console.log("Fetching data...");
-      const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; //takes 59.06 sec
-      const response = await axios.get(apiUrl);
-      const data = response.data;
 
-      if (!data || data.length === 0) {
-        console.log("No data found!");
-        return;
-      }
-  
-      await Sheet.deleteMany({}); // Clear old data
-      await Sheet.insertMany(data.map(item => ({ sheet_name: item.sheet_name, sheet_data: item.sheet_data })));
-  
-      console.log("Data successfully stored in MongoDB!");
-    } catch (error) {
-      console.error("Error fetching/storing data:", error.message);
+async function fetchAndStoreData() {
+  try {
+    console.log("Fetching data...");
+
+    // API URL
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwxLKMDCJXXCK5wS2JnoQY7K4rKBjlfZZQS_p8f-RqWDq2LrrHiYgqhMNf6i8jbomyplA/exec";
+
+    // Fetch data from the MongoDB collection
+    const data = await Sheet.find({}, { _id: 0, __v: 0 });
+
+
+    console.log("Data fetched from MongoDB:", JSON.stringify(data, null, 2));
+
+    for (const record of data) {
+      // Convert sheet_data to JSON string before URL encoding
+      const sheetName = encodeURIComponent(record.sheet_name);
+
+      const sheetData = encodeURIComponent(JSON.stringify(record.sheet_data));
+      
+      console.log("dsfs"+sheetName);
+      console.log(sheetData);
+      const response = await axios.get(
+        `${apiUrl}?action=update&sheet_name=${sheetName}&newData=${sheetData}&callback=?`,
+        {
+          timeout: 30000  // Set the timeout to 30 seconds
+        }
+      );
+      
+
+      console.log(`Response for ${record.sheet_name}:`, response);
+    }
+
+    // const sheetData = encodeURIComponent(data);
+    // const response = await axios.get(
+    //       `${apiUrl}?action=updateAll&&sheetData=${sheetData}&callback=?`,  {
+    //               timeout: 30000  // Set the timeout to 30 seconds
+    //             }
+    //     ); 
+
+    //     console.log(`Response for :`, response.message);
+
+    console.log("All data successfully stored in Excel!");
+
+
+  } catch (error) {
+    console.error("Error fetching/storing data:", error.message);
+    if (error.response) {
+      console.error("API Response:", error.response.data);
     }
   }
+}
+fetchAndStoreData()
+// setInterval(fetchAndStoreData, 30000);
+
+
+
   
 
 
