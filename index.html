@@ -1381,11 +1381,11 @@
         } else {
           eligible = "Invalid input";
         }
-      
+      let suddx;
         let eligibleForSUDCBT;
         if (document.getElementById('suddx').value === '' ) {
           eligibleForSUDCBT = "Yes";
-          document.getElementById('suddx').value="NA";
+          suddx = "NA";
         } else {
           eligibleForSUDCBT = "No";
         }
@@ -1400,7 +1400,7 @@
           'Eligible for CBT': eligible,
           'Biopsychosocial Assessment': document.getElementById('biopsychosocialAssessment').value,
           'Eligible for SUD': document.getElementById('eligibleForSUD').value,
-          'SUD DX': document.getElementById('suddx').value || "NA",
+          'SUD DX': suddx,
           'Eligible for SUD CBT': eligibleForSUDCBT,
           'Programs': document.getElementById('programs').value,
           'Last Visit Type': document.getElementById('LastVisitType').value,
