@@ -749,6 +749,7 @@
         <tbody></tbody>
       </table>
     </div>
+
   <div id="addFormModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
@@ -867,6 +868,7 @@
         <div class="form-group">
           <label for="programs">Programs:</label>
           <select id="programs" required>
+            <option value="Select">Select</option>
             <option value="PRP-Completed">PRP-Completed</option>
             <option value="IOP-Completed">IOP-Completed</option>
             <option value="PHP-Completed">PHP-Completed</option>
@@ -1144,7 +1146,16 @@
               completeRow[col] = value;
               if (value !== "") hasData = true; // If any column has a value, mark as non-empty
             });
+            
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
+            if(completeRow['SUD DX']=="NA"){
+              completeRow['Eligible for SUD']="Yes";
+            }
+
+            if(completeRow['Eligible for SUD']=="Yes" && completeRow['Eligible for CBT']=="Yes" ){
+              completeRow['Eligible for SUD CBT']="Yes";
+            }
+
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
           })
           .filter(row => row !== null); 
@@ -1372,10 +1383,11 @@
         }
       
         let eligibleForSUDCBT;
-        if (document.getElementById('suddx').value != 'NA' ) {
-          eligibleForSUDCBT = "No";
-        } else {
+        if (document.getElementById('suddx').value === '' ) {
           eligibleForSUDCBT = "Yes";
+          document.getElementById('suddx').value="NA";
+        } else {
+          eligibleForSUDCBT = "No";
         }
         const newData = {
           'PAYER': document.getElementById('payer').value,
@@ -1525,8 +1537,13 @@
         } else if (columnName === "BIMS score") {
             // Dropdown for BIMS Score
             inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
+          }
+          else if (columnName === "Biopsychosocial Assessment") {
+            // Dropdown for BIMS Score
+            inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","Yes", "No"], currentValue)}</select>`;
           } else if (columnName === "Last Visit Type") {
             // Dropdown for Last Visit Type
+
             inputElement = `<select class="edit-input custom-drop">${generateOptions([
              "Select", "Biopsych Assessment", "CBT/ Psychotherapy", "Full Cognitive Exam", "Initial Med Visit",
               "Followup Med Visit", "Consult", "Pain Management", "SUD/Biopsychosocial assessment",
@@ -1535,7 +1552,7 @@
             ], currentValue)}</select>`;
           } else if (columnName === "Programs") {
             // Dropdown for Programs
-            inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","PRP-Completed", "IOP-Completed", "PHP-Completed", "PRP-Approved", "IOP-Approved", "PHP-Approved"], currentValue)}</select>`;
+            inputElement = `<select class="edit-input custom-drop">${generateOptions(["Select", "PRP-Completed", "IOP-Completed", "PHP-Completed", "PRP-Approved", "IOP-Approved", "PHP-Approved"], currentValue)}</select>`;
           } else if (columnName !== "Actions") {
             // Default text input
             inputElement = `<input type="text" class="edit-input" value="${currentValue}">`;

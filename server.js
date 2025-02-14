@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+//app.use(cors());
 app.use(express.json());
 
 
@@ -31,14 +31,10 @@ const Sheet = mongoose.model("Sheet", sheetSchema);
 async function fetchAndStoreData() {
     try {
       console.log("Fetching data...");
-      const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; 
+      const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; //takes 59.06 sec
       const response = await axios.get(apiUrl);
       const data = response.data;
 
-      
-
-
-  
       if (!data || data.length === 0) {
         console.log("No data found!");
         return;
