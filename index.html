@@ -1064,7 +1064,7 @@
 
       $.getJSON(apimongo, function (data) {
         hideLoading();
-      //  console.log(data);
+       console.log(data);
         if (data && data.length > 0) {
           sheetsData = data;
           const savedSheet = localStorage.getItem('selectedSheet');
@@ -1169,6 +1169,7 @@
             });
             
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
+            completeRow['id'] = row['id'];
             if(completeRow['SUD DX']=="NA"){
               completeRow['Eligible for SUD']="Yes";
             }
@@ -1183,17 +1184,7 @@
       
        
 
-// if (localStorage.getItem('filteredData')) {
 
-//   localStorage.removeItem('filteredData');
-// }
-
-
-        // saveFilteredData(filteredData);
-        // getFilteredData((data) => {
-        //   filteredData = data;
-        //   console.log("in loading"+filteredData)
-        // });
 
       
         const uniqueRoomNumbers = new Set();
@@ -1541,6 +1532,7 @@
           if (response.success) {
             modal.style.display = "none";
             addForm.reset();
+            await fetchData();
             reloadtimeinterval = true;
           } else {
             alert('Failed to add new entry: ' + response.message);
@@ -1619,7 +1611,7 @@
 
         // Find the row in DataTables
         let rowIndex = dataTableInstance.rows().indexes().filter(index => {
-          return dataTableInstance.row(index).data()['Resident Full Name'] === row['Resident Full Name'];
+          return dataTableInstance.row(index).data()['id'] === row['id'];
         })[0];
 
         if (rowIndex === undefined) {

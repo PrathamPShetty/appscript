@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const cors = require("cors");
 require("dotenv").config();
+const { v4: uuidv4 } = require('uuid');
+
+
 
 const app = express();
 app.use(cors());
@@ -88,30 +91,101 @@ app.get("/get-sheets", async (req, res) => {
   }
 });
 
-app.post("/addData", async (req, res) => {
+
+
+app.post("/addData", async (req, res) => { 
   try {
     const { sheet_name, data } = req.body;
 
-    if (!sheet_name || !data) {
+    if (!sheet_name || !data) { 
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
+    // Generate unique ID if not provided
+    if (!data.id) {
+      data.id = uuidv4();
+    }
+
+    // Update only if the ID doesn't exist in the array
     const result = await Sheet.updateOne(
-      { sheet_name: sheet_name }, 
-      { $push: { sheet_data: data } } // Add new data to the sheet_data array
+      { sheet_name: sheet_name },
+      { $push: { sheet_data: data } }
     );
 
     if (result.matchedCount === 0) {
       return res.status(404).json({ success: false, message: "Sheet not found" });
     }
 
-    res.status(200).json({ success: true, message: "New data added successfully" });
+    res.status(200).json({ success: true, message: "New data added successfully", id: data.id });
 
   } catch (error) {
     console.error("Error adding data:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
+
+
+app.post("/addnewSheetName", async (req, res) => {
+  try {
+    const { sheet_name } = req.body;
+
+    // Validate Input
+    if (!sheet_name) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    // Check if Sheet Already Exists
+    const find = await Sheet.find({ sheet_name: sheet_name });
+    if (find.length > 0) {
+      return res.status(409).json({ success: false, message: "Sheet already present" });
+    }
+
+    // Insert New Sheet
+    const newSheet = await Sheet.create({
+      sheet_name: sheet_name,
+    });
+
+    if (!newSheet) {
+      return res.status(500).json({ success: false, message: "Failed to add new sheet" });
+    }
+
+    // Success Response
+    res.status(201).json({ success: true, message: "New sheet added successfully", data: newSheet });
+
+  } catch (error) {
+    console.error("Error adding data:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
+app.post("/updateSheetItem", async (req, res) => {
+  try {
+    const { sheet_name, item_id, updateData } = req.body;
+
+    if (!sheet_name || !item_id || !updateData) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const result = await Sheet.updateOne(
+      { sheet_name: sheet_name, "sheet_data.id": item_id },
+      { $set: { "sheet_data.$": updateData } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ success: false, message: "Sheet or item not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Item updated successfully" });
+
+  } catch (error) {
+    console.error("Error updating item:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
 
 
 app.post("/updateName", async (req, res) => {
