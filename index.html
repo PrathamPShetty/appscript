@@ -918,7 +918,7 @@
 
   <div id="sheetFormModal" class="modal">
     <div class="modal-content">
-      <span class="close">&times;</span>
+      <span class="close" onclick="closenewsheet()" >&times;</span>
       <h2>Add New Entry</h2>
       <form id="sheetForm">
   
@@ -1390,6 +1390,7 @@
       const addsheet=document.getElementById('addNewSheetBtn')
       const closeBtn = document.getElementsByClassName('close')[0];
       const addForm = document.getElementById('addForm');
+      const sheetForm=document.getElementById('sheetForm');
       const modelsheet=document.getElementById('sheetFormModal');//adding sheets
       
   
@@ -1421,51 +1422,101 @@
     //   document.getElementById('sheetForm').reset();
     // };
 
+ 
     // // AJAX Form Submission
-    // document.getElementById('sheetForm').onsubmit = function (e) {
-    //   e.preventDefault();
-    //   reloadtimeinterval = false;
+     document.getElementById('sheetForm').onsubmit = function (e) {
+      e.preventDefault();
+      reloadtimeinterval = false;
+      const waitMessage = document.querySelector('.wait-message');
+      const submitBtn = document.querySelector('.submit-btn');
+      waitMessage.style.display = 'inline';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
 
-    //   const waitMessage = document.querySelector('.wait-message');
-    //   const submitBtn = document.querySelector('.submit-btn');
-    //   waitMessage.style.display = 'inline';
-    //   submitBtn.disabled = true;
-    //   submitBtn.style.opacity = '0.7';
+      let data = {
+        "sheetName": document.getElementById('newsheet').value
+      };
 
-    //   let data = {
-    //     "sheetName": document.getElementById('newsheet').value
-    //   };
+      $.ajax({
+        url: "http://localhost:7002/addSheet",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ data }),
+        success: function (response) {
+          console.log(response);
+          waitMessage.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
 
-    //   $.ajax({
-    //     url: "http://localhost:7002/addSheet",
-    //     type: "POST",
-    //     contentType: "application/json",
-    //     data: JSON.stringify({ data }),
-    //     success: function (response) {
-    //       console.log(response);
-    //       waitMessage.style.display = 'none';
-    //       submitBtn.disabled = false;
-    //       submitBtn.style.opacity = '1';
+          if (response.success) {
+            alert('Sheet added successfully!');
+            document.getElementById('sheetFormModal').style.display = 'none';
+            document.getElementById('sheetForm').reset();
+            reloadtimeinterval = true;
+          } else {
+            alert('Failed to add new entry: ' + response.message);
+            reloadtimeinterval = true;
+          }
+        },
+        error: function () {
+          alert('Failed to connect to the server. Please try again.');
+          waitMessage.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          reloadtimeinterval = true;
+       }
+      });
+    };
 
-    //       if (response.success) {
-    //         alert('Sheet added successfully!');
-    //         document.getElementById('sheetFormModal').style.display = 'none';
-    //         document.getElementById('sheetForm').reset();
-    //         reloadtimeinterval = true;
-    //       } else {
-    //         alert('Failed to add new entry: ' + response.message);
-    //         reloadtimeinterval = true;
-    //       }
-    //     },
-    //     error: function () {
-    //       alert('Failed to connect to the server. Please try again.');
-    //       waitMessage.style.display = 'none';
-    //       submitBtn.disabled = false;
-    //       submitBtn.style.opacity = '1';
-    //       reloadtimeinterval = true;
-    //     }
-    //   });
-    // };
+
+//     document.getElementById('sheetForm').onsubmit = function (e) {
+//   e.preventDefault();
+
+//   const waitMessage = document.querySelector('.wait-message');
+//   const submitBtn = document.querySelector('.submit-btn');
+//   waitMessage.style.display = 'inline';
+//   submitBtn.disabled = true;
+//   submitBtn.style.opacity = '0.7';
+
+//   const sheetName = document.getElementById('newsheet').value.trim(); // Get the value from the input field
+
+//   if (!sheetName) {
+//     alert("Please enter a sheet name.");
+//     waitMessage.style.display = 'none';
+//     submitBtn.disabled = false;
+//     submitBtn.style.opacity = '1';
+//     return;
+//   }
+
+//   const scriptURL = "https://script.google.com/macros/s/AKfycbwdbNMo1YqIS0T4QJgNgSVXvZaPZX6D1vbm9FZY1S_xYZDyCHTmyeO3pHd6hIcdSRfN/exec";
+
+//   fetch(scriptURL, {
+//     method: "POST",
+//     mode: "cors",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ action: "createSheet", sheet_name: sheetName }), // Use the sheetName variable here!
+//   })
+//     .then(response => {
+//       if (!response.ok) { // Check for HTTP errors
+//         return response.json().then(err => {throw new Error(err.message || response.statusText)}); // Throw error with message
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data.message); // Or display the message in the UI
+//       alert(data.message); // Show a success message to the user
+//       document.getElementById('newsheet').value = ''; // Clear the input field
+//     })
+//     .catch(error => {
+//       console.error("Error:", error);
+//       alert("Error creating sheet: " + error.message); // Show the error to the user
+//     })
+//     .finally(() => { // Always re-enable the button
+//       waitMessage.style.display = 'none';
+//       submitBtn.disabled = false;
+//       submitBtn.style.opacity = '1';
+//     });
+// };
 
 
       addForm.onsubmit = function (e) {
