@@ -12,7 +12,7 @@ app.use(express.json());
 
 //app.use(cors());
 
-app.use(cors({ origin: "https://register.mcceducare.com", credentials: true }));
+// app.use(cors({ origin: "https://register.mcceducare.com", credentials: true }));
 
 
 
