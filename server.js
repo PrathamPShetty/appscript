@@ -43,7 +43,7 @@ async function fetchAndStoreData() {
     const data = await Sheet.find({}, { _id: 0, __v: 0 });
 
 
-    console.log("Data fetched from MongoDB:", JSON.stringify(data, null, 2));
+    // console.log("Data fetched from MongoDB:", JSON.stringify(data, null, 2));
 
     for (const record of data) {
       // Convert sheet_data to JSON string before URL encoding
@@ -51,8 +51,8 @@ async function fetchAndStoreData() {
 
       const sheetData = encodeURIComponent(JSON.stringify(record.sheet_data));
       
-      console.log("dsfs"+sheetName);
-      console.log(sheetData);
+      // console.log("dsfs"+sheetName);
+      // console.log(sheetData);
       const response = await axios.get(
         `${apiUrl}?action=update&sheet_name=${sheetName}&newData=${sheetData}&callback=?`,
         {
@@ -73,7 +73,7 @@ async function fetchAndStoreData() {
 
     //     console.log(`Response for :`, response.message);
 
-    console.log("All data successfully stored in Excel!");
+    // console.log("All data successfully stored in Excel!");
 
 
   } catch (error) {
@@ -172,8 +172,12 @@ app.post("/addnewSheetName", async (req, res) => {
       return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
+    console.log(sheet_name);
+
     // Check if Sheet Already Exists
     const find = await Sheet.find({ sheet_name: sheet_name });
+
+    
     if (find.length > 0) {
       return res.status(409).json({ success: false, message: "Sheet already present" });
     }

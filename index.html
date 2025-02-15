@@ -924,7 +924,7 @@
   
         <div class="form-group">
           <label for="newsheet">Sheet Name</label>
-          <input type="text" id="newsheet" required value="Default Value">
+          <input type="text" id="newsheet" required >
         </div>
 
         <div class="form-buttons">
@@ -1146,7 +1146,7 @@
         }
       }
       
-      setInterval(fetchDataConditionally,15000);
+      setInterval(fetchDataConditionally,150000);
 
 
 
@@ -1412,15 +1412,15 @@
 
 
 
-    //   document.querySelector('.close').onclick = () => {
-    //   document.getElementById('sheetFormModal').style.display = 'none';
-    // };
+      document.querySelector('.close').onclick = () => {
+      document.getElementById('sheetFormModal').style.display = 'none';
+    };
 
-    // // Cancel Button
-    // document.querySelector('.cancel-btn').onclick = () => {
-    //   document.getElementById('sheetFormModal').style.display = 'none';
-    //   document.getElementById('sheetForm').reset();
-    // };
+    // Cancel Button
+    document.querySelector('.cancel-btn').onclick = () => {
+      document.getElementById('sheetFormModal').style.display = 'none';
+      document.getElementById('sheetForm').reset();
+    };
 
  
     // // AJAX Form Submission
@@ -1433,39 +1433,42 @@
       submitBtn.disabled = true;
       submitBtn.style.opacity = '0.7';
 
-      let data = {
-        "sheetName": document.getElementById('newsheet').value
-      };
+      let data =  document.getElementById('newsheet').value
+     
+
+      console.log(data);
 
       $.ajax({
-        url: "http://localhost:7002/addSheet",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ data }),
-        success: function (response) {
-          console.log(response);
-          waitMessage.style.display = 'none';
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = '1';
+    url: apiUrl + "/addnewSheetName",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({ sheet_name: data }),  // Correct key and structure
+    success: function (response) {
+        console.log(response);
+        waitMessage.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        fetchData();
 
-          if (response.success) {
+        if (response.success) {
             alert('Sheet added successfully!');
             document.getElementById('sheetFormModal').style.display = 'none';
             document.getElementById('sheetForm').reset();
             reloadtimeinterval = true;
-          } else {
+        } else {
             alert('Failed to add new entry: ' + response.message);
             reloadtimeinterval = true;
-          }
-        },
-        error: function () {
-          alert('Failed to connect to the server. Please try again.');
-          waitMessage.style.display = 'none';
-          submitBtn.disabled = false;
-          submitBtn.style.opacity = '1';
-          reloadtimeinterval = true;
-       }
-      });
+        }
+    },
+    error: function () {
+        alert('Failed to connect to the server. Please try again.');
+        waitMessage.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        reloadtimeinterval = true;
+    }
+});
+
     };
 
 
