@@ -1575,6 +1575,8 @@
         let rowIndex = dataTableInstance.rows().indexes().filter(index => {
           return dataTableInstance.row(index).data()['Resident Full Name'] === row['Resident Full Name'];
         })[0];
+
+
         $.getJSON(apiUrl + "?action=readmit" +
           "&sheet_name=" + encodeURIComponent($('#sheetSelector').val()) +
           "&rowData=" + encodeURIComponent(JSON.stringify(row)) +
@@ -1608,9 +1610,10 @@
         reloadtimeinterval = false;
         //console.log(reloadtimeinterval);
         console.log("Editing Row:", row);
-
+        let id ;
         // Find the row in DataTables
         let rowIndex = dataTableInstance.rows().indexes().filter(index => {
+           id = row['id'];
           return dataTableInstance.row(index).data()['id'] === row['id'];
         })[0];
 
@@ -1618,14 +1621,17 @@
           console.error("Row not found in table!");
           return;
         }
-
+    
         let rowNode = $(dataTableInstance.row(rowIndex).node());
+        console.log(rowNode);
         let columns = Object.keys(row);
 
-        // Convert each cell into an appropriate input field
+       
         rowNode.find('td').each(function (index) {
           let columnName = columns[index];
           let currentValue = $(this).text().trim();
+
+          
 
           let inputElement;
           if (columnName === "Last Visit Date" || columnName === "Prior Auth Expiry Date") {
@@ -1680,74 +1686,69 @@
             <button class="cancel-btn">Cancel</button>
         </div>
     `);
-
+   
         // Handle "Save" click
-        rowNode.find('.save-btn').on('click', function () {
-          let updatedData = {};
-          rowNode.find('td').each(function (index) {
-            let columnName = columns[index];
-            if (columnName !== "Actions") {
-              let inputElement = $(this).find('input, select');
-              let newValue = inputElement.val();
+        rowNode.find('.save-btn').off('click').on('click', function () {
+    let updatedData = { id: id }; // Initialize with ID directly
+    const sheetName = $('#sheetSelector').val();
 
-              // If the input field is empty, keep the original value
-              if (columnName === "Last Visit Date" || columnName === "Prior Auth Expiry Date") {
-                updatedData[columnName] = newValue ? convertToUSDate(newValue) : row[columnName];
-            } else {
-                updatedData[columnName] = newValue || row[columnName];
-            }
-    
-            // Specifically handle the "Resident Full Name" and its background color
-            if (columnName === "Resident Full Name") {
-                // Get the selected color from the dropdown
-                let selectedColor = rowNode.find('select.small-color-picker').val();
-                console.log(selectedColor);
-    
-                // Save the selected background color in the updated data
-                updatedData["Background"] = selectedColor;
-    
-                // Update the background color of the "Resident Full Name" cell immediately
-                $(this).css('background-color', selectedColor);
-            }
-            }
-          });
+    rowNode.find('td').each(function (index) {
+        const columnName = columns[index];
+        if (columnName === "Actions") return;
 
-      
+        let inputElement = $(this).find('input, select');
+        let newValue = inputElement.val();
 
+        // Handle date fields
+        if (["Last Visit Date", "Prior Auth Expiry Date"].includes(columnName)) {
+            updatedData[columnName] = newValue ? convertToUSDate(newValue) : row[columnName];
+        } else {
+            updatedData[columnName] = newValue || row[columnName];
+        }
 
-          // Send updated data to Google Sheets
-          $.getJSON(apiUrl + "?action=update" +
-            "&sheet_name=" + encodeURIComponent($('#sheetSelector').val()) +
-            "&oldData=" + encodeURIComponent(JSON.stringify(row)) +
-            "&newData=" + encodeURIComponent(JSON.stringify(updatedData)) +
-            "&callback=?")
-            .done( async function (response) {
-              if (response.success) {
-                await alert("Row updated successfully!");
-           
-               
+        // Handle background color for "Resident Full Name"
+        if (columnName === "Resident Full Name") {
+            const selectedColor = rowNode.find('select.small-color-picker').val();
+            updatedData["Background"] = selectedColor;
+            $(this).css('background-color', selectedColor);
+        }
+    });
+
+    console.log("Updated Data:", updatedData);
+
+    // Send updated data to Google Sheets
+    $.ajax({
+        url: "http://localhost:7002/editData",
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            action: 'update',
+            sheet_name: sheetName,
+            newData: updatedData
+        }),
+        success: function (response) {
+            if (response.success) {
+                alert("Row updated successfully!");
                 dataTableInstance.row(rowIndex).data(updatedData).draw(false);
-                // window.location.reload();
-                fetchData();
                 reloadtimeinterval = true;
-                //console.log(reloadtimeinterval);
-              } else {
+            } else {
                 reloadtimeinterval = true;
                 alert("Failed to update row: " + response.message);
-              }
-            })
-            .fail(function () {
-              reloadtimeinterval = true;
-              alert("Error: Could not connect to the server.");
-            });
-        });
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            reloadtimeinterval = true;
+            alert(`Error: ${textStatus} - ${errorThrown}`);
+        }
+    });
+});
 
-        // Handle "Cancel" click (Revert changes)
-        rowNode.find('.cancel-btn').on('click', function () {
-          dataTableInstance.row(rowIndex).data(row).draw(false);
-          reloadtimeinterval = true;
-        });
-      };
+// Handle "Cancel" click (Revert changes)
+rowNode.find('.cancel-btn').off('click').on('click', function () {
+    dataTableInstance.row(rowIndex).data(row).draw(false);
+    reloadtimeinterval = true;
+});
+      }
 
       /// Utility function to convert MM/DD/YYYY to YYYY-MM-DD for <input type="date">
       function convertToISODate(dateString) {

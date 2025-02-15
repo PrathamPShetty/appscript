@@ -83,8 +83,8 @@ async function fetchAndStoreData() {
     }
   }
 }
-fetchAndStoreData()
-// setInterval(fetchAndStoreData, 30000);
+
+setInterval(fetchAndStoreData, 30000);
 
 
 
@@ -224,35 +224,42 @@ app.post("/updateSheetItem", async (req, res) => {
 
 
 
-
-app.post("/updateName", async (req, res) => {
+app.post("/editData", async (req, res) => {
   try {
-    const { sheet_name, oldName, newName } = req.body;
+    const { sheet_name, newData } = req.body;
 
-    if (!sheet_name || !oldName || !newName) {
-      return res.status(400).json({ success: false, message: "Missing required fields" });
+    // Validate inputs
+    if (!sheet_name || !newData.id) {
+      return res.status(400).json({ success: false, message: "Missing required fields: sheet_name or id" });
     }
 
-    // Find and update the record within the sheet data
-    const result = await Sheet.updateOne(
-      { 
-        sheet_name: sheet_name, 
-        "sheet_data.name": oldName 
-      },
-      { 
-        $set: { "sheet_data.$.name": newName } 
+    // Prepare the update object dynamically
+    let updateFields = {};
+    for (const [key, value] of Object.entries(newData)) {
+      if (key !== "id") {
+        updateFields[`sheet_data.$.${key}`] = value;
       }
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ success: false, message: "No valid fields to update" });
+    }
+
+    // Perform the update
+    const result = await Sheet.updateOne(
+      { sheet_name: sheet_name, "sheet_data.id": newData.id },
+      { $set: updateFields }
     );
 
     if (result.matchedCount === 0) {
-      return res.status(404).json({ success: false, message: "Name not found in the sheet" });
+      return res.status(404).json({ success: false, message: "ID not found in the sheet" });
     }
 
-    res.status(200).json({ success: true, message: "Name updated successfully" });
+    res.status(200).json({ success: true, message: "Row updated successfully" });
 
   } catch (error) {
-    console.error("Error updating name:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    console.error("Error updating row:", error);
+    res.status(500).json({ success: false, message: `Internal server error: ${error.message}` });
   }
 });
 
