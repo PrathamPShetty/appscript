@@ -1465,7 +1465,6 @@
           'Prior Auth Expiry Date': document.getElementById('expiry').value.split("-").reverse().join("/"),
           'Unit': document.getElementById('unit').value,
           'Room Number': document.getElementById('roomNumber').value,
-          'Resident Full Name Background': document.querySelector('input[name="color"]:checked')?.value, 
           'Resident Full Name': document.getElementById('residentFullName').value,
           'BIMS score': document.getElementById('bimsScore').value,
           'Eligible for CBT': eligible,
@@ -1475,7 +1474,8 @@
           'Eligible for SUD CBT': eligibleForSUDCBT,
           'Programs': document.getElementById('programs').value,
           'Last Visit Type': document.getElementById('LastVisitType').value,
-          'Last Visit Date': document.getElementById('lastVisitDate').value.split("-").reverse().join("/")
+          'Last Visit Date': document.getElementById('lastVisitDate').value.split("-").reverse().join("/"),
+          'Resident Full Name Background': document.querySelector('input[name="color"]:checked')?.value
         };
 
       //  console.log(newData);
