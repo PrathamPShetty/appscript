@@ -61,7 +61,7 @@ async function fetchAndStoreData() {
       );
       
 
-      console.log(`Response for ${record.sheet_name}:`, response);
+      //console.log(`Response for ${record.sheet_name}:`, response);
     }
 
     // const sheetData = encodeURIComponent(data);
@@ -262,6 +262,122 @@ app.post("/editData", async (req, res) => {
     res.status(500).json({ success: false, message: `Internal server error: ${error.message}` });
   }
 });
+
+
+app.post("/deleteData", async (req, res) => {
+  try {
+    const { sheet_name, rowData, dischargeDate } = req.body;
+
+    console.log("Incoming Delete Request:", req.body); // Debugging
+
+    if (!sheet_name || !rowData.id) {
+      return res.status(400).json({ success: false, message: "Missing required fields: sheet_name or id" });
+    }
+
+    // Check if the row exists before attempting deletion
+    const existingSheet = await Sheet.findOne({
+      sheet_name: sheet_name,
+      "sheet_data.id": rowData.id
+    });
+
+    if (!existingSheet) {
+      return res.status(404).json({ success: false, message: "Row not found" });
+    }
+
+    // Extract the data to be transferred
+    const deletedRow = existingSheet.sheet_data.find((row) => row.id === rowData.id);
+
+    // Perform the deletion
+    const result = await Sheet.updateOne(
+      { sheet_name: sheet_name },
+      { $pull: { sheet_data: { id: rowData.id } } }
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ success: false, message: "Row not found or already deleted" });
+    }
+    
+
+    deletedRow["Discharge Date"] = dischargeDate;
+    // Prepare discharge sheet name
+    const dischargeSheetName = `Discharge_${sheet_name}`;
+
+    // Check if discharge sheet exists, if not create it
+    const dischargeSheet = await Sheet.findOne({ sheet_name: dischargeSheetName });
+    if (!dischargeSheet) {
+      await Sheet.create({ sheet_name: dischargeSheetName, sheet_data: [deletedRow] });
+    } else {
+      // Add the deleted row to the discharge sheet
+      await Sheet.updateOne(
+        { sheet_name: dischargeSheetName },
+        { $push: { sheet_data: deletedRow } }
+      );
+    }
+
+    res.status(200).json({ success: true, message: "Row deleted and moved to discharge sheet successfully" });
+
+  } catch (error) {
+    console.error("Error deleting row:", error);
+    res.status(500).json({ success: false, message: `Internal server error: ${error.message}` });
+  }
+});
+
+
+app.post("/readmitData", async (req, res) => {
+  try {
+    const { sheet_name, rowData } = req.body;
+
+    if (!sheet_name || !rowData?.id) {
+      return res.status(400).json({ success: false, message: "Missing required fields: sheet_name or rowData.id" });
+    }
+
+    const dischargeSheetName = sheet_name;
+
+    // Find the discharged row
+    const dischargeSheet = await Sheet.findOne({ sheet_name: dischargeSheetName });
+    if (!dischargeSheet) {
+      return res.status(404).json({ success: false, message: "Discharge sheet not found" });
+    }
+
+    const dischargedRow = dischargeSheet.sheet_data.find(row => row.id === rowData.id);
+    if (!dischargedRow) {
+      return res.status(404).json({ success: false, message: "Patient not found in discharge sheet" });
+    }
+
+    // Remove the row from the discharge sheet
+    const removeResult = await Sheet.updateOne(
+      { sheet_name: dischargeSheetName },
+      { $pull: { sheet_data: { id: rowData.id } } }
+    );
+
+    if (removeResult.modifiedCount === 0) {
+      return res.status(500).json({ success: false, message: "Failed to remove patient from discharge sheet" });
+    }
+
+    // Remove the 'Discharge Date' field before re-admitting
+    delete dischargedRow['Discharge Date'];
+
+    // Get the original sheet name
+    const originalSheetName = dischargeSheetName.replace("Discharge_", "");
+
+    // Add the row back to the original sheet
+    const addResult = await Sheet.updateOne(
+      { sheet_name: originalSheetName },
+      { $push: { sheet_data: dischargedRow } }
+    );
+
+    if (addResult.modifiedCount === 0) {
+      return res.status(500).json({ success: false, message: "Failed to add patient back to the original sheet" });
+    }
+
+    res.status(200).json({ success: true, message: "Patient readmitted successfully" });
+
+  } catch (error) {
+    console.error("Error readmitting patient:", error);
+    res.status(500).json({ success: false, message: `Internal server error: ${error.message}` });
+  }
+});
+
 
 
 
