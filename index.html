@@ -1613,7 +1613,7 @@
 
 
       $.ajax({
-        url: "http://localhost:7002/addData",
+        url: apiUrl+"/addData",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
@@ -1813,7 +1813,7 @@
 
     // Send updated data to Google Sheets
     $.ajax({
-        url: "http://localhost:7002/editData",
+        url: apiUrl+"/editData",
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -1915,7 +1915,7 @@ rowNode.find('.cancel-btn').off('click').on('click', function () {
         if(deleteconfirmation){
 
           $.ajax({
-       url: "http://localhost:7002/deleteData",
+       url: apiUrl+"/deleteData",
             method: 'POST',
     contentType: 'application/json',
     data: JSON.stringify({
