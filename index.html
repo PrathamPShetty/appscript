@@ -747,7 +747,7 @@
       <!-- Add Sheet Modal -->
       <div id="addSheetModal" class="modal">
         <div class="modal-content">
-          <span class="close" >&times;</span>
+          <span class="close">&times;</span>
           <h2>Add New Sheet</h2>
           <form id="addSheetForm">
             <div class="form-group">
@@ -916,7 +916,7 @@
 
 
 
-  <!-- <div id="sheetFormModal" class="modal">
+  <div id="sheetFormModal" class="modal">
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Add New Entry</h2>
@@ -930,11 +930,11 @@
         <div class="form-buttons">
           <span class="wait-message">Please wait...</span>
           <button type="submit" class="submit-btn">Submit</button>
-          <button type="button" class="cancel-btn">Cancel</button>
+          <button type="button" class="cancel-btn" onclick='closenewsheet()'>Cancel</button>
         </div>
       </form>
     </div>
-  </div> -->
+  </div>
 
   <div id="alertTables" class="modal">
     <div class="modal-content">
@@ -1002,7 +1002,10 @@
         }
       window.closePopup=closePopup;
 
-
+        function closenewsheet(){
+          modelsheet.style.display = "none"
+        }
+      window.closenewsheet=closenewsheet;
       $isDischarge.change(function (e) {
         const isDischargeMode = e.target.value == 1; 
 
@@ -1385,9 +1388,17 @@
 
       const modal = document.getElementById('addFormModal');
       const addBtn = document.getElementById('addNewBtn');
+      const addsheet=document.getElementById('addNewSheetBtn')
       const closeBtn = document.getElementsByClassName('close')[0];
       const addForm = document.getElementById('addForm');
-      const cancebtn=document.getElementsByClassName('cancel-btn')
+      const modelsheet=document.getElementById('sheetFormModal');//adding sheets
+      
+  
+
+      addsheet.onclick=function(){
+        modelsheet.style.display="Block";
+      }
+
       addBtn.onclick = function () {
         modal.style.display = "block";
       }
