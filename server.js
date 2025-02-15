@@ -200,7 +200,23 @@ app.get("/fetchData", async (req, res) => {
   
 
 
-
+  app.get("/get-sheet", async (req, res) => {
+    try {
+      console.log("API Fetching the first 5 records...");
+      db.once("open", () => console.log("Connected to MongoDB"));
+  
+      // Fetch only the first 5 documents
+      const sheets = await Sheet.find({}, { _id: 0, __v: 0 }).limit(5);
+  
+      console.log("Data loaded successfully");
+      res.json(sheets);
+  
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+      res.status(500).json({ message: "Error fetching data", error: error.message });
+    }
+  });
+  
 
 app.get("/get-sheets", async (req, res) => {
   try {
