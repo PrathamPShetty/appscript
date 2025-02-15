@@ -20,6 +20,9 @@ app.use(express.json());
 mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  connectTimeoutMS: 10000, // 10 seconds
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 20000,
 });
 
 const db = mongoose.connection;
@@ -202,6 +205,7 @@ app.get("/fetchData", async (req, res) => {
 app.get("/get-sheets", async (req, res) => {
   try {
     console.log("Api Fetching data...");
+    db.once("open", () => console.log("Connected to MongoDB"));
     const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
     console.log("data loading");
     res.json(sheets);
