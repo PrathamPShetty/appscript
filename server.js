@@ -20,7 +20,7 @@ app.use(express.json());
 mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  connectTimeoutMS: 10000, // 10 seconds
+  connectTimeoutMS: 100000, // 10 seconds
   serverSelectionTimeoutMS: 10000,
   socketTimeoutMS: 20000,
 });
