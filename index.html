@@ -907,7 +907,8 @@
         <div class="form-buttons">
           <span class="wait-message">Please wait...</span>
           <button type="submit" class="submit-btn">Submit</button>
-          <button type="button" class="cancel-btn">Cancel</button>
+          <!-- <button type="button" class="cancel-btn" onclick='closeme()'>Cancel</button> -->
+          <button type="button" class="cancel-btn" onclick='closePopup()'>Cancel</button>
         </div>
       </form>
     </div>
@@ -994,10 +995,11 @@
       let sheetsData = [];
 
       let reloadtimeinterval = false;
-
-
-      
-     
+    
+      function closePopup() {
+            modal.style.display = "none"
+        }
+      window.closePopup=closePopup;
 
 
       $isDischarge.change(function (e) {
@@ -1384,15 +1386,12 @@
       const addBtn = document.getElementById('addNewBtn');
       const closeBtn = document.getElementsByClassName('close')[0];
       const addForm = document.getElementById('addForm');
-
+      const cancebtn=document.getElementsByClassName('cancel-btn')
       addBtn.onclick = function () {
         modal.style.display = "block";
       }
-
-      closeBtn.onclick = function () {
-        modal.style.display = "none";
-      }
-
+      
+     
       window.onclick = function (event) {
         if (event.target === modal) {
           modal.style.display = "none";
@@ -1469,6 +1468,7 @@
         waitMessage.style.display = 'inline';
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
+       
       //  console.log(document.getElementById('bimsScore').value);
        // console.log(typeof document.getElementById('bimsScore').value);
         let eligible;
