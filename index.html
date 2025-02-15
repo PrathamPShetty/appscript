@@ -66,8 +66,7 @@
   background-color: #f8f9fa;
   outline: none;
 }
-
-    .header {
+.header {
       background: #2c3e50;
       padding: 20px 0;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -667,6 +666,7 @@
     </div>
   </div>
 
+
   <!-- Main Content -->
   <div class="container">
 
@@ -1208,12 +1208,27 @@
             
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             completeRow['id'] = row['id'];
-            if(completeRow['SUD DX']=="NA"){
-              completeRow['Eligible for SUD']="Yes";
+            if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']===''){
+              completeRow['Eligible for SUD']="  No";
+            }else{
+              completeRow['Eligible for SUD']="  Yes";
             }
+
+            if (
+  (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
+  completeRow['BIMS score'] === 99 ||
+  completeRow['BIMS score'] === 'Non Cognitive'||
+  completeRow['BIMS score'] === 'Non cognitive'
+) {
+  completeRow['Eligible for CBT'] = "No";
+} else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
+  completeRow['Eligible for CBT'] = "Yes";
+}
 
             if(completeRow['Eligible for SUD']=="Yes" && completeRow['Eligible for CBT']=="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
+            }else{
+              completeRow['Eligible for SUD CBT']="No";
             }
 
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
@@ -1222,9 +1237,6 @@
       
        
 
-
-
-      
         const uniqueRoomNumbers = new Set();
         const uniqueUnits = new Set();
    
