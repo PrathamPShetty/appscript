@@ -8,14 +8,14 @@ const { v4: uuidv4 } = require('uuid');
 
 
 const app = express();
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 
 
 
 
-mongoose.connect("mongodb+srv://Pratham99sai:Pratham99sai@pratham.cwnip.mongodb.net/sheet1?retryWrites=true&w=majority&appName=Pratham", {
+mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -32,87 +32,167 @@ const sheetSchema = new mongoose.Schema({
 const Sheet = mongoose.model("Sheet", sheetSchema);
 
 
+// async function fetchAndStoreData() {
+//   try {
+//     console.log("Fetching data...");
+
+//     // API URL
+//     const apiUrl = "https://script.google.com/macros/s/AKfycbwxLKMDCJXXCK5wS2JnoQY7K4rKBjlfZZQS_p8f-RqWDq2LrrHiYgqhMNf6i8jbomyplA/exec";
+
+//     // Fetch data from the MongoDB collection
+//     const data = await Sheet.find({}, { _id: 0, __v: 0 });
+
+
+//     // console.log("Data fetched from MongoDB:", JSON.stringify(data, null, 2));
+
+//     for (const record of data) {
+//       // Convert sheet_data to JSON string before URL encoding
+//       const sheetName = encodeURIComponent(record.sheet_name);
+
+//       const sheetData = encodeURIComponent(JSON.stringify(record.sheet_data));
+      
+//       // console.log("dsfs"+sheetName);
+//       // console.log(sheetData);
+//       const response = await axios.get(
+//         `${apiUrl}?action=update&sheet_name=${sheetName}&newData=${sheetData}&callback=?`,
+//         {
+//           timeout: 30000  // Set the timeout to 30 seconds
+//         }
+//       );
+      
+
+//       //console.log(`Response for ${record.sheet_name}:`, response);
+//     }
+//   } catch (error) {
+//     console.error("Error fetching/storing data:", error.message);
+//     if (error.response) {
+//       console.error("API Response:", error.response.data);
+//     }
+//   }
+// }
+
+
 async function fetchAndStoreData() {
   try {
     console.log("Fetching data...");
 
-    // API URL
     const apiUrl = "https://script.google.com/macros/s/AKfycbwxLKMDCJXXCK5wS2JnoQY7K4rKBjlfZZQS_p8f-RqWDq2LrrHiYgqhMNf6i8jbomyplA/exec";
 
-    // Fetch data from the MongoDB collection
+    // Fetch all data from MongoDB
     const data = await Sheet.find({}, { _id: 0, __v: 0 });
 
-
-    // console.log("Data fetched from MongoDB:", JSON.stringify(data, null, 2));
-
-    for (const record of data) {
-      // Convert sheet_data to JSON string before URL encoding
-      const sheetName = encodeURIComponent(record.sheet_name);
-
-      const sheetData = encodeURIComponent(JSON.stringify(record.sheet_data));
-      
-      // console.log("dsfs"+sheetName);
-      // console.log(sheetData);
-      const response = await axios.get(
-        `${apiUrl}?action=update&sheet_name=${sheetName}&newData=${sheetData}&callback=?`,
-        {
-          timeout: 30000  // Set the timeout to 30 seconds
-        }
-      );
-      
-
-      //console.log(`Response for ${record.sheet_name}:`, response);
+    if (!data || data.length === 0) {
+      console.log("No data to sync.");
+      return;
     }
 
-    // const sheetData = encodeURIComponent(data);
-    // const response = await axios.get(
-    //       `${apiUrl}?action=updateAll&&sheetData=${sheetData}&callback=?`,  {
-    //               timeout: 30000  // Set the timeout to 30 seconds
-    //             }
-    //     ); 
+    // Split data into chunks
+    const chunkSize = 2;
+    for (let i = 0; i < data.length; i += chunkSize) {
+      const chunk = data.slice(i, i + chunkSize);
 
-    //     console.log(`Response for :`, response.message);
+      // Prepare the payload
+      const records = chunk.map(record => ({
+        sheet_name: record.sheet_name,
+        sheet_data: record.sheet_data
+      }));
 
-    // console.log("All data successfully stored in Excel!");
+      // Send data without encoding
+      const response = await axios.post(apiUrl, {
+        action: "updateAll",
+        sheetData: records  // Send directly as an array
+      }, { timeout: 30000 });
 
+      console.log(`Chunk ${i / chunkSize + 1} response:`, response.data);
+    }
+
+    console.log("Data successfully sent in batches!");
 
   } catch (error) {
-    console.error("Error fetching/storing data:", error.message);
+    console.error("Error during data sync:", error.message);
     if (error.response) {
       console.error("API Response:", error.response.data);
     }
   }
 }
 
-setInterval(fetchAndStoreData, 30000);
+// fetchAndStoreData();
+
+
+// setInterval(fetchAndStoreData, 30000);
 
 
 
   
 
+app.get("/fetchData", async (req, res) => {
+  try {
+    console.log("API Fetching data...");
 
-  // app.get("/fetchData", async (req, res) => {
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; 
+    const response = await axios.get(apiUrl);
+    const data = response.data;
+
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log("No valid data found!");
+      return res.status(400).json({ error: "Invalid or empty data" });
+    }
+
+    await Sheet.deleteMany({}); 
+
+    const records = data.map(item => ({
+      sheet_name: item.sheet_name,
+      sheet_data: item.sheet_data.map(entry => ({
+        ...entry,
+        id: entry.id || uuidv4()
+      }))
+    }));
+
+    await Sheet.insertMany(records);
+
+    console.log("Data successfully stored in MongoDB!");
+
+    const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
+    res.json(sheets);
+
+  } catch (error) {
+    console.error("Error fetching/storing data:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+  // app.post("/fetchData", async (req, res) => {
   //   try {
-  //       console.log("Api Fetching data...");
-  //       const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; 
-  //       const response = await axios.get(apiUrl);
-  //       const data = response.data;
-  //       if (!data || data.length === 0) {
-  //         console.log("No data found!");
-  //         return;
-  //       }
-  //       await Sheet.deleteMany({}); // Clear old data
-  //       await Sheet.insertMany(data.map(item => ({ sheet_name: item.sheet_name, sheet_data: item.sheet_data })));
-    
-  //       console.log("Data successfully stored in MongoDB!");
-
-  //       const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
-
-  //       res.json(sheets);
-  //     } catch (error) {
-  //       console.error("Error fetching/storing data:", error.message);
+  //     const { data } = req.body;
+  
+  //     if (!data || data.length === 0) {
+  //       console.log("No data provided!");
+  //       return res.status(400).json({ success: false, message: "No data provided" });
   //     }
-  // }); 
+  
+  //     // Clear existing collection and insert new data
+  //     await Sheet.deleteMany({});
+  //     await Sheet.insertMany(
+  //       data.map(item => ({
+  //         sheet_name: item.sheet_name,
+  //         sheet_data: item.sheet_data
+  //       }))
+  //     );
+  
+  //     console.log("Data successfully stored in MongoDB!");
+  
+  //     // Retrieve and return the inserted sheets (excluding _id and __v)
+  //     const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
+  
+  //     res.status(201).json({ success: true, data: sheets });
+  //   } catch (error) {
+  //     console.error("Error fetching/storing data:", error.message);
+  //     res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+  //   }
+  // });
+  
 
 
 
