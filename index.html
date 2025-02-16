@@ -1252,6 +1252,8 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               completeRow['Eligible for CBT'] = "No";
             } else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
               completeRow['Eligible for CBT'] = "Yes";
+            } else{
+              completeRow['Eligible for CBT'] = "";
             }
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
@@ -1618,7 +1620,7 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
         let eligibleForSUDCBT;
         if (document.getElementById('suddx').value === '' ) {
           eligibleForSUDCBT = "Yes";
-          suddx = "NA";
+          suddx = "";
         } else {
           eligibleForSUDCBT = "No";
         }
