@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            /* background: linear-gradient(135deg, #6a11cb, #2575fc); */
+            /* background-image: url("background.jpg"); */
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(white,gray);
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            transform: translateY(-20px);
+            animation: slideIn 0.5s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .footer a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function jump(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get the values from the input fields
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+
+            // Check the credentials
+            if (email === "Gowthami.S@BDOC-corp.org" && pass === "Gowthami_Sanivarapu") {
+                window.location.href = "https://bdrctools.com/index.html"; // Redirect to the dashboard
+            } 
+            else if(email === "Heelima@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "HimaBindu@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Kashifa.Z@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Muiz@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Saishritha.K@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Karthik@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Somalaraju@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "udaya.b@bdoc-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Umar.M@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "Vaishnavi.CH@BDOC-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "beena.j@bdoc-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "victor@bdoc-corp.org" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else if(email === "vaish@pifiservices.com" && pass === "Pass@word"){
+                 window.location.href = "https://bdrctools.com/index.html"; 
+            }
+            
+            else {
+                alert("Please enter the correct Email or Password");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="submit-btn" onclick="jump(event)">Login</button>
+        </form>
+    </div>
+</body>
+
+</html>
