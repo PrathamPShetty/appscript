@@ -1237,13 +1237,15 @@
             }else{
               completeRow['Eligible for SUD CBT']="No";
             }
-
-            if(completeRow['Programs']==="Select" || completeRow['Programs']==="select"){
-              completeRow['Programs']==="";
-            }
-            if(completeRow['Last Visit Type']==="Select" || completeRow['Last Visit Type']==="select"){
-              completeRow['Last Visit Type']==="";
-            }
+// Reset 'Programs' if 'Select' is chosen
+if (completeRow['Programs']?.toLowerCase() === "select") {
+  completeRow['Programs'] = " ";
+}
+console.log(completeRow['Programs']);
+// Reset 'Last Visit Type' if 'Select' is chosen
+if (completeRow['Last Visit Type']?.toLowerCase() === "select") {
+  completeRow['Last Visit Type'] = " ";
+}
 
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
           })
