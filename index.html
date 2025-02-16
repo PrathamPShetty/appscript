@@ -1213,8 +1213,11 @@
             
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             completeRow['id'] = row['id'];
-            if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']===''){
+            if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']==null ||
+            completeRow['SUD DX']==''
+            ){
               completeRow['Eligible for SUD']="  No";
+              completeRow['SUD DX']='NA'
             }else{
               completeRow['Eligible for SUD']="  Yes";
             }
