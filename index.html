@@ -1222,7 +1222,7 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             completeRow['id'] = row['id'];
             if (completeRow['SUD DX'] === "NA") {
   completeRow['Eligible for SUD'] = "Yes";
-} else if (completeRow['SUD DX'] !== "NA") {
+} else if (completeRow['SUD DX'] !== "NA"|| "") {
   completeRow['Eligible for SUD'] = "No";
 } else {
   completeRow['Eligible for SUD'] = "";
