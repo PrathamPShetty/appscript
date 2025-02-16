@@ -135,6 +135,7 @@ async function fetchAndStoreData() {
 app.get("/fetchData", async (req, res) => {
   try {
     console.log("API Fetching data...");
+    db.once("open", () => console.log("Connected to MongoDB"));
 
     const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; 
     const response = await axios.get(apiUrl);
@@ -243,6 +244,7 @@ app.get("/get-sheets", async (req, res) => {
 app.post("/addData", async (req, res) => { 
   try {
     const { sheet_name, data } = req.body;
+    db.once("open", () => console.log("Connected to MongoDB"));
 
     if (!sheet_name || !data) { 
       return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -292,9 +294,13 @@ app.post("/addnewSheetName", async (req, res) => {
       return res.status(409).json({ success: false, message: "Sheet already present" });
     }
 
-    // Insert New Sheet
+    const data = {};
+
+    data['id'] = uuidv4();
+
     const newSheet = await Sheet.create({
       sheet_name: sheet_name,
+      sheet_data: data
     });
 
     if (!newSheet) {
