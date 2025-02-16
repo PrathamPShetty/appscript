@@ -1847,7 +1847,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         // Handle background color for "Resident Full Name"
         if (columnName === "Resident Full Name") {
             const selectedColor = rowNode.find('select.small-color-picker').val();
-            updatedData["Background"] = selectedColor;
+            updatedData["Resident Full Name Background"] = selectedColor;
             $(this).css('background-color', selectedColor);
         }
     });
