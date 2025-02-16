@@ -220,7 +220,7 @@
     #sheetSelector,
     .drop-down {
       background-color: white;
-      min-width: 200px;
+      min-width: 100px;
       margin-right: 20px;
     }
 
@@ -645,7 +645,7 @@
     .pdf-btn i {
       font-size: 16px;
     }
-
+    
 
     /* General styling for input fields */
 
@@ -665,11 +665,11 @@
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
+  
 
 
   <!-- Main Content -->
   <div class="container">
-
     <div class="filter-container" style="margin-bottom: 20px;">
       <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px;">
         <!-- Facility/Discharge Dropdown -->
@@ -691,7 +691,7 @@
       
         <!-- Room Number Filter -->
         <div class="filter-group" style="flex: 1 1 200px; gap: 2px;">
-          <label for="roomNumberFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">Room Number Filter:</label>
+          <label for="roomNumberFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;width:250px">Room Number Filter:</label>
           <select id="roomNumberFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; min-width: 150px; max-width: 300px;">
           </select>
         </div>
@@ -716,10 +716,9 @@
         <!-- BIMS Filter -->
         <div class="filter-group" style="flex: 1 1 200px;">
           <label for="bimsFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">BIMS Filter:</label>
-          <select id="bimsFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 10%;">
+          <select id="bimsFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             <option value="">Select</option>
             <option value="null">Null</option>
-           
             <option value="0-7">0-7</option>
             <option value="8-15">8-15</option>
             <option value="99">99</option>
@@ -742,6 +741,8 @@
       <div class="add-button-container" style="margin-bottom: 20px; text-align: right;">
         <button id="addNewBtn" class="add-btn" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Add New Entry</button>
         <button id="addNewSheetBtn" class="add-btn" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Add New Sheet</button>
+        <button onclick="reset()" class="add-btn" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Refresh</button>
+
       </div>
       
       <!-- Add Sheet Modal -->
@@ -762,7 +763,6 @@
           </form>
         </div>
       </div>
-
 
     <!-- Responsive Table -->
     <div class="table-responsive" style="margin: 30px; width: calc(100% - 60px);overflow-x: auto;">
@@ -913,7 +913,6 @@
       </form>
     </div>
   </div>
-
 
 
   <div id="sheetFormModal" class="modal">
@@ -1115,7 +1114,12 @@
         alert("Failed to fetch data from the API.");
       });
   
+      function reset(){
+        localStorage.setItem('selectedSheet','Anchorage Nursing');
 
+        location.reload();
+      }
+      window.reset=reset
 
   
 
@@ -1208,10 +1212,13 @@
             
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             completeRow['id'] = row['id'];
-            if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']===''){
-              completeRow['Eligible for SUD']="  No";
+            if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']==null ||
+            completeRow['SUD DX']==''
+            ){
+              completeRow['Eligible for SUD']=" Yes";
+              completeRow['SUD DX']='NA'
             }else{
-              completeRow['Eligible for SUD']="  Yes";
+              completeRow['Eligible for SUD']=" NO";
             }
 
             if (
