@@ -294,13 +294,12 @@ app.post("/addnewSheetName", async (req, res) => {
       return res.status(409).json({ success: false, message: "Sheet already present" });
     }
 
-    const data = {};
 
-    data['id'] = uuidv4();
+
+  
 
     const newSheet = await Sheet.create({
-      sheet_name: sheet_name,
-      sheet_data: data
+      sheet_name: sheet_name
     });
 
     if (!newSheet) {
