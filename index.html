@@ -1206,7 +1206,7 @@
           .map(row => {
             let completeRow = {};
             let hasData = false; // Flag to check if at least one column has a value
-      
+          
             columnArray.forEach(col => {
               let value = row[col] !== undefined && row[col] !== null ? String(row[col]).trim() : ""; // Ensure value is a string and trim it
               completeRow[col] = value;
@@ -1218,12 +1218,12 @@
             if(completeRow['SUD DX']==="NA" || completeRow['SUD DX']==null ||
             completeRow['SUD DX']==''
             ){
-              completeRow['Eligible for SUD']=" Yes";
+              completeRow['Eligible for SUD']="Yes";
               completeRow['SUD DX']='NA'
             }else{
               completeRow['Eligible for SUD']=" NO";
             }
-            
+            console.log(completeRow['Discharge Date'])
             if (
   (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
   completeRow['BIMS score'] === 99 ||
@@ -1235,7 +1235,7 @@
   completeRow['Eligible for CBT'] = "Yes";
 }
 
-            if(completeRow['Eligible for SUD']=="Yes" && completeRow['Eligible for CBT']=="Yes" ){
+            if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
             }else{
               completeRow['Eligible for SUD CBT']="No";
