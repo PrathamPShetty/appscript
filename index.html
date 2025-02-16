@@ -1251,8 +1251,11 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               completeRow['Eligible for CBT'] = "No";
             } else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
               completeRow['Eligible for CBT'] = "Yes";
-            } else{
-              completeRow['Eligible for CBT'] = "";
+            } else if(completeRow['BIMS score'] === "" || completeRow['BIMS score'] == null){
+         
+              completeRow['Eligible for CBT'] =""||null;
+            }else{
+              completeRow['Eligible for CBT'] =""||null;
             }
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
