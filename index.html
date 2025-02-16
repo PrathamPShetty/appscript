@@ -1229,122 +1229,131 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               completeRow['Eligible for SUD']=" NO";
             }
             
-            // ////console.log(completeRow['Discharge Date'])
             if (completeRow['Discharge Date'] && completeRow['Discharge Date'].trim() !== "") {
-    const date = new Date(completeRow['Discharge Date']);
-    
-    // Ensure the date is valid before formatting
-    if (!isNaN(date.getTime())) {
-        completeRow['Discharge Date'] = `${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(2, '0')}/${date.getUTCFullYear()}`;
-    } else {
-        console.error("Invalid date:", completeRow['Discharge Date']);
-    }
-}
-
-
+              const date = new Date(completeRow['Discharge Date']);
+              
+              // Ensure the date is valid before formatting
+              if (!isNaN(date.getTime())) {
+                completeRow['Discharge Date'] = `${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(2, '0')}/${date.getUTCFullYear()}`;
+                console.log(completeRow['Discharge Date']);
+              } else {
+                console.error("Invalid date:", completeRow['Discharge Date']);
+              }
+            }
+            
+            
             if (
-  (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
-  completeRow['BIMS score'] === 99 ||
-  completeRow['BIMS score'] === 'Non Cognitive'||
-  completeRow['BIMS score'] === 'Non cognitive'
-) {
-  completeRow['Eligible for CBT'] = "No";
-} else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
-  completeRow['Eligible for CBT'] = "Yes";
-}
-
+              (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
+              completeRow['BIMS score'] === 99 ||
+              completeRow['BIMS score'] === 'Non Cognitive'||
+              completeRow['BIMS score'] === 'Non cognitive'
+            ) {
+              completeRow['Eligible for CBT'] = "No";
+            } else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
+              completeRow['Eligible for CBT'] = "Yes";
+            }
+            
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
             }else{
               completeRow['Eligible for SUD CBT']="No";
             }
-// Reset 'Programs' if 'Select' is chosen
-if (completeRow['Programs']?.toLowerCase() === "select") {
-  completeRow['Programs'] = " ";
-}
-//console.log(completeRow['Programs']);
-// Reset 'Last Visit Type' if 'Select' is chosen
-if (completeRow['Last Visit Type']?.toLowerCase() === "select") {
-  completeRow['Last Visit Type'] = " ";
-}
-
+            // Reset 'Programs' if 'Select' is chosen
+            if (completeRow['Programs']?.toLowerCase() === "select") {
+              completeRow['Programs'] = " ";
+            }
+            //console.log(completeRow['Programs']);
+            // Reset 'Last Visit Type' if 'Select' is chosen
+            if (completeRow['Last Visit Type']?.toLowerCase() === "select") {
+              completeRow['Last Visit Type'] = " ";
+            }
+            
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
           })
           .filter(row => row !== null); 
-      
-       
+          
+          
+          
+          const uniqueRoomNumbers = new Set();
+          const uniqueUnits = new Set();
+          
+          
+          // Populate the Sets with unique values from the filtered data
+          filteredData.forEach(row => {
+            if (row['Room Number']) uniqueRoomNumbers.add(row['Room Number']);
+            if (row['Unit']) uniqueUnits.add(row['Unit']);
+          });
+          
+          $roomNumberFilter.empty();
+          $unitFilter.empty();
+          
+          
+          
+          $roomNumberFilter.append(`<option value="">All</option>`);
+          $unitFilter.append(`<option value="">All</option>`);
+          
+          
+          
+          
+          
+          uniqueRoomNumbers.forEach(roomNumber => {
+            $roomNumberFilter.append(`<option value="${roomNumber}">${roomNumber}</option>`);
+          });
+          
+          uniqueUnits.forEach(unit => {
+            $unitFilter.append(`<option value="${unit}">${unit}</option>`);
+          });
+          
+          
+          const storedData = JSON.parse(localStorage.getItem('filteredData'));
+          if (storedData) {
+            filteredData = storedData; 
+          }
+          console.log(filteredData);
 
-        const uniqueRoomNumbers = new Set();
-        const uniqueUnits = new Set();
-   
-  
-        // Populate the Sets with unique values from the filtered data
-        filteredData.forEach(row => {
-          if (row['Room Number']) uniqueRoomNumbers.add(row['Room Number']);
-          if (row['Unit']) uniqueUnits.add(row['Unit']);
-        });
-      
-        $roomNumberFilter.empty();
-        $unitFilter.empty();
-   
-   
+          console.log(columnArray);
+         
 
-        $roomNumberFilter.append(`<option value="">All</option>`);
-        $unitFilter.append(`<option value="">All</option>`);
-      
-        
-      
+          if ($.fn.dataTable.isDataTable($dataTable)) {
+    dataTableInstance.destroy();
+    $dataTable.empty(); // Clear the table structure completely
+}
 
-      
-        uniqueRoomNumbers.forEach(roomNumber => {
-          $roomNumberFilter.append(`<option value="${roomNumber}">${roomNumber}</option>`);
-        });
-      
-        uniqueUnits.forEach(unit => {
-          $unitFilter.append(`<option value="${unit}">${unit}</option>`);
-        });
-      
-      
-        const storedData = JSON.parse(localStorage.getItem('filteredData'));
-        if (storedData) {
-          filteredData = storedData; 
-        }
-
-    // Initialize or update DataTable
-if ($.fn.dataTable.isDataTable($dataTable)) {
-    dataTableInstance.clear().rows.add(filteredData).draw();
-} else {
-    dataTableInstance = $dataTable.DataTable({
-        responsive: false,
-        destroy: true,
-        scrollX: true,
-        data: filteredData,
+          // Initialize or update DataTable
+          if ($.fn.dataTable.isDataTable($dataTable)) {
+            dataTableInstance.clear().rows.add(filteredData).draw();
+          } else {
+            dataTableInstance = $dataTable.DataTable({
+              responsive: false,
+              destroy: true,
+              scrollX: true,
+              data: filteredData,
         columns: [
             ...columnArray.map(header => ({
                 data: header,
                 title: `<span class="large-header" style="min-width:142px">${header.replace(/_/g, ' ')}</span>`
             })),
             {
-                title: 'Actions',
-                data: null,
-                orderable: false,
-                render: function (data, type, row) {
-                    const rowData = encodeURIComponent(JSON.stringify(row));
-                    return localStorage.getItem("selectedSheet").toLowerCase().includes("discharge")
-                        ? `<button class="edit-btn" onclick="reAdmitRow('${rowData}')">Readmit</button>`
-                        : `<div class="action-buttons">
-                               <button class="edit-btn" onclick="editRow('${rowData}')">Edit</button>
-                               <button class="delete-btn" onclick="deleteRow('${rowData}')">Delete</button>
+              title: 'Actions',
+              data: null,
+              orderable: false,
+              render: function (data, type, row) {
+                const rowData = encodeURIComponent(JSON.stringify(row));
+                return localStorage.getItem("selectedSheet").toLowerCase().includes("discharge")
+                ? `<button class="edit-btn" onclick="reAdmitRow('${rowData}')">Readmit</button>`
+                : `<div class="action-buttons">
+                  <button class="edit-btn" onclick="editRow('${rowData}')">Edit</button>
+                  <button class="delete-btn" onclick="deleteRow('${rowData}')">Delete</button>
                            </div>`;
                 }
             }
-        ],
+          ],
         paging: true,
         searching: true,
         ordering: true,
         dom: '<"top"f>rt<"bottom"ip>',
         language: {
-            search: "Patient Lookup : ",
+          search: "Patient Lookup : ",
             info: "Showing _TOTAL_ entries",
             emptyTable: "No data available", // Display when empty
             paginate: {
@@ -1353,25 +1362,25 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
                 next: "Next",
                 previous: "Previous"
             }
-        },
-        pageLength: 100,
-        rowCallback: function (row, data, index) {
+          },
+          pageLength: 100,
+          rowCallback: function (row, data, index) {
             const backgroundColor = data['Resident Full Name Background'];
             if (backgroundColor) {
-                const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
-                cell.css('background-color', backgroundColor);
+              const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
+              cell.css('background-color', backgroundColor);
             }
         }
-    });
-}
-
-
-
-      }
-
-
-      $colorFilter.on('change', function() {
-        // Define the columns and color mapping
+      });
+    }
+    
+    
+    
+  }
+  
+  
+  $colorFilter.on('change', function() {
+    // Define the columns and color mapping
         const columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
         const colorMapping = { "": "", Red: '#d9a59b', Purple: '#d9d2e9', White: '#ffffff' };
     
@@ -1381,33 +1390,33 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         dataTableInstance.rows().every(function() {
             const rowData = this.data();
             const bgColor = rowData['Resident Full Name Background'];
-    
-     
-    
+            
+            
+            
             // If the background color matches or if "All Color" is selected
             if (bgColor && (searchTerm === "" || bgColor === searchTerm)) {
-                // Show the row and apply background color
-                $(this.node()).show();
-                $(this.node()).find('td').eq(columnArray.indexOf('Resident Full Name')).css('background-color', bgColor);
+              // Show the row and apply background color
+              $(this.node()).show();
+              $(this.node()).find('td').eq(columnArray.indexOf('Resident Full Name')).css('background-color', bgColor);
             } else {
-                // Hide the row if it doesn't match the selected filter
-                $(this.node()).hide();
+              // Hide the row if it doesn't match the selected filter
+              $(this.node()).hide();
             }
+          });
+          
+          // Redraw the table after the filtering process
+          dataTableInstance.draw();
         });
-    
-        // Redraw the table after the filtering process
-        dataTableInstance.draw();
-    });
-    
+        
+        
+        
     
     
-    
-    
-      $roomNumberFilter.change(function (e) {
-        const selectedRoomNumber = e.target.value;
-        dataTableInstance.columns(3).search(selectedRoomNumber).draw();
-      });
-      
+        $roomNumberFilter.change(function (e) {
+          const selectedRoomNumber = e.target.value;
+          dataTableInstance.columns(3).search(selectedRoomNumber).draw();
+        });
+        
       $unitFilter.change(function (e) {
         const selectedUnit = e.target.value;
         dataTableInstance.columns(2).search(selectedUnit).draw();
@@ -1419,7 +1428,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       $bimsFilter.change(function (e) {
         const selectedBims = e.target.value;
         const bimsMapping = {
-      
+          
           "0-7": "^0$|^1$|^2$|^3$|^4$|^5$|^6$|^7$",
           "8-15": "8|9|10|11|12|13|14|15", // Regex to match values 8 to 15
           "99": "99", // Exact match for 99
@@ -1427,19 +1436,19 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           "null": " " ,
           "":"^0$|^1$|^2$|^3$|^4$|^5$|^6$|^7$|8|9|10|11|12|13|14|15|99|^Not Cognitive$|^\s*$"
         };
-
+        
        
-      
+        
         const searchTerm = bimsMapping[selectedBims] || "";
-
+        
         //console.log(searchTerm);
-      
+        
         dataTableInstance.columns(5).search('^' + searchTerm + '$', true, false).draw();
-
+        
       });
       
-
-
+      
+      
       const modal = document.getElementById('addFormModal');
       const addBtn = document.getElementById('addNewBtn');
       const addsheet=document.getElementById('addNewSheetBtn')
@@ -1448,38 +1457,38 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       const sheetForm=document.getElementById('sheetForm');
       const modelsheet=document.getElementById('sheetFormModal');//adding sheets
       
-  
+      
 
       addsheet.onclick=function(){
         modelsheet.style.display="Block";
       }
-
+      
       addBtn.onclick = function () {
         modal.style.display = "block";
       }
       
-     
+      
       window.onclick = function (event) {
         if (event.target === modal) {
           modal.style.display = "none";
         }
       }
+      
 
-
-
+      
       document.querySelector('.close').onclick = () => {
-      document.getElementById('sheetFormModal').style.display = 'none';
-    };
-
-    // Cancel Button
-    document.querySelector('.cancel-btn').onclick = () => {
-      document.getElementById('sheetFormModal').style.display = 'none';
+        document.getElementById('sheetFormModal').style.display = 'none';
+      };
+      
+      // Cancel Button
+      document.querySelector('.cancel-btn').onclick = () => {
+        document.getElementById('sheetFormModal').style.display = 'none';
       document.getElementById('sheetForm').reset();
     };
-
- 
+    
+    
     // // AJAX Form Submission
-     document.getElementById('sheetForm').onsubmit = function (e) {
+    document.getElementById('sheetForm').onsubmit = function (e) {
       e.preventDefault();
       reloadtimeinterval = false;
       const waitMessage = document.querySelector('.wait-message');
@@ -1487,42 +1496,42 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       waitMessage.style.display = 'inline';
       submitBtn.disabled = true;
       submitBtn.style.opacity = '0.7';
-
+      
       let data =  document.getElementById('newsheet').value
      
 
       //console.log(data);
 
       $.ajax({
-    url: apiUrl + "/addnewSheetName",
-    type: "POST",
-    contentType: "application/json",
-    data: JSON.stringify({ sheet_name: data }),  // Correct key and structure
-    success: function (response) {
-        //console.log(response);
-        waitMessage.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        fetchData();
-
-        if (response.success) {
+        url: apiUrl + "/addnewSheetName",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ sheet_name: data }),  // Correct key and structure
+        success: function (response) {
+          //console.log(response);
+          waitMessage.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          fetchData();
+          
+          if (response.success) {
             alert('Sheet added successfully!');
             document.getElementById('sheetFormModal').style.display = 'none';
             document.getElementById('sheetForm').reset();
             reloadtimeinterval = true;
-        } else {
+          } else {
             alert('Failed to add new entry: ' + response.message);
             reloadtimeinterval = true;
-        }
-    },
-    error: function () {
-        alert('Failed to connect to the server. Please try again.');
+          }
+        },
+        error: function () {
+          alert('Failed to connect to the server. Please try again.');
         waitMessage.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.style.opacity = '1';
         reloadtimeinterval = true;
-    }
-});
+      }
+    });
 
     };
 
@@ -1555,20 +1564,20 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
 //     body: JSON.stringify({ action: "createSheet", sheet_name: sheetName }), // Use the sheetName variable here!
 //   })
 //     .then(response => {
-//       if (!response.ok) { // Check for HTTP errors
-//         return response.json().then(err => {throw new Error(err.message || response.statusText)}); // Throw error with message
-//       }
+  //       if (!response.ok) { // Check for HTTP errors
+  //         return response.json().then(err => {throw new Error(err.message || response.statusText)}); // Throw error with message
+  //       }
 //       return response.json();
 //     })
 //     .then(data => {
-//       //console.log(data.message); // Or display the message in the UI
-//       alert(data.message); // Show a success message to the user
-//       document.getElementById('newsheet').value = ''; // Clear the input field
-//     })
-//     .catch(error => {
-//       console.error("Error:", error);
-//       alert("Error creating sheet: " + error.message); // Show the error to the user
-//     })
+  //       //console.log(data.message); // Or display the message in the UI
+  //       alert(data.message); // Show a success message to the user
+  //       document.getElementById('newsheet').value = ''; // Clear the input field
+  //     })
+  //     .catch(error => {
+    //       console.error("Error:", error);
+    //       alert("Error creating sheet: " + error.message); // Show the error to the user
+    //     })
 //     .finally(() => { // Always re-enable the button
 //       waitMessage.style.display = 'none';
 //       submitBtn.disabled = false;
@@ -1581,26 +1590,26 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         e.preventDefault();
         reloadtimeinterval = false;
         ////console.log(reloadtimeinterval);
-
+        
         // Show wait message and disable submit button
         const waitMessage = document.querySelector('.wait-message');
         const submitBtn = document.querySelector('.submit-btn');
         waitMessage.style.display = 'inline';
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
-       
-      //  //console.log(document.getElementById('bimsScore').value);
-       // //console.log(typeof document.getElementById('bimsScore').value);
+        
+        //  //console.log(document.getElementById('bimsScore').value);
+        // //console.log(typeof document.getElementById('bimsScore').value);
         let eligible;
         if ((document.getElementById('bimsScore').value >= 0 && document.getElementById('bimsScore').value <= 7) || document.getElementById('bimsScore').value === '99' || document.getElementById('bimsScore').value === "Not Cognitive") {
           eligible = "No";
         } else if (document.getElementById('bimsScore').value >= 8 && document.getElementById('bimsScore').value <= 15) {
-
+          
           eligible = "Yes";
         } else {
           eligible = "Invalid input";
         }
-      let suddx;
+        let suddx;
         let eligibleForSUDCBT;
         if (document.getElementById('suddx').value === '' ) {
           eligibleForSUDCBT = "Yes";
@@ -1625,8 +1634,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           'Last Visit Date': document.getElementById('lastVisitDate').value.split("-").reverse().join("/"),
           'Resident Full Name Background': document.querySelector('input[name="color"]:checked')?.value
         };
-
-      //  //console.log(newData);
+        
+        //  //console.log(newData);
        // //console.log(newData.Color);
 
       // $.getJSON(apiUrl + "?action=add" +
@@ -1640,22 +1649,22 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       //         modal.style.display = "none";  
       //         addForm.reset();  
          
-           
+      
       //         reloadtimeinterval = true;
-         
+      
       //       } else {
-      //         alert('Failed to add new entry: ' + response.message);
-      //         // Reset wait message and submit button on failure
-      //         waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
-      //         submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
-      //         submitBtn.style.opacity = '1';
+        //         alert('Failed to add new entry: ' + response.message);
+        //         // Reset wait message and submit button on failure
+        //         waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
+        //         submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
+        //         submitBtn.style.opacity = '1';
       //         reloadtimeinterval = true;
       //       }
       //     })
       //     .fail(function () {
-      //       alert('Failed to connect to the server. Please try again.');
-      //       // Reset wait message and submit button on failure
-      //       waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
+        //       alert('Failed to connect to the server. Please try again.');
+        //       // Reset wait message and submit button on failure
+        //       waitMessage.style.display = 'none';  // Ensure 'waitMessage' is defined
       //       submitBtn.disabled = false;  // Ensure 'submitBtn' is defined
       //       submitBtn.style.opacity = '1';
       //       reloadtimeinterval = true;
@@ -1665,8 +1674,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       //   modal.style.display = "none";
       //   addForm.reset(); // Reset form when cancelled
       // } 
-
-
+      
+      
       $.ajax({
         url: apiUrl+"/addData",
         type: "POST",
@@ -1698,44 +1707,44 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           reloadtimeinterval = true;
         }
       });
-    
+      
       document.querySelector('.cancel-btn').onclick = function () {
         modal.style.display = "none";
         addForm.reset();
       };
       
     }
-
-
-
-      // Handle sheet selection
-      $sheetSelector.change(function () {
-        const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === $(this).val());
-        localStorage.setItem('selectedSheet', $(this).val());
-        if (selectedSheet) loadSheetData(selectedSheet);
-      });
-
-      window.reAdmitRow = function (rowData) {
-        const row = JSON.parse(decodeURIComponent(rowData));
-        reloadtimeinterval = false;
-        ////console.log(reloadtimeinterval);
-        //console.log("Readmitting Row:", row);
-        let rowIndex = dataTableInstance.rows().indexes().filter(index => {
-          return dataTableInstance.row(index).data()['Resident Full Name'] === row['Resident Full Name'];
+    
+    
+    
+    // Handle sheet selection
+    $sheetSelector.change(function () {
+      const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === $(this).val());
+      localStorage.setItem('selectedSheet', $(this).val());
+      if (selectedSheet) loadSheetData(selectedSheet);
+    });
+    
+    window.reAdmitRow = function (rowData) {
+      const row = JSON.parse(decodeURIComponent(rowData));
+      reloadtimeinterval = false;
+      ////console.log(reloadtimeinterval);
+      //console.log("Readmitting Row:", row);
+      let rowIndex = dataTableInstance.rows().indexes().filter(index => {
+        return dataTableInstance.row(index).data()['Resident Full Name'] === row['Resident Full Name'];
         })[0];
 
 
         $.ajax({
-  url: apiUrl + "/readmitData",
-  type: "POST",
-  contentType: "application/json",
-  data: JSON.stringify({
-    sheet_name: $('#sheetSelector').val(),
-    rowData: row
-  }),
-  success: async function(response) {
-    //console.log(response);
-    if (response.success) {
+          url: apiUrl + "/readmitData",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            sheet_name: $('#sheetSelector').val(),
+            rowData: row
+          }),
+          success: async function(response) {
+            //console.log(response);
+            if (response.success) {
       alert("Readmitted successfully!");
       dataTableInstance.row(rowIndex).remove().draw(false);
       await fetchData();
@@ -1751,38 +1760,38 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
   }
 });
 
-      }
+}
 
 
-      
-      window.editRow = function (rowData) {
-        const row = JSON.parse(decodeURIComponent(rowData));
-        reloadtimeinterval = false;
-        ////console.log(reloadtimeinterval);
-        //console.log("Editing Row:", row);
-        let id ;
-        // Find the row in DataTables
-        let rowIndex = dataTableInstance.rows().indexes().filter(index => {
-           id = row['id'];
-          return dataTableInstance.row(index).data()['id'] === row['id'];
-        })[0];
 
-        if (rowIndex === undefined) {
-          console.error("Row not found in table!");
-          return;
-        }
-    
-        let rowNode = $(dataTableInstance.row(rowIndex).node());
-        //console.log(rowNode);
-        let columns = Object.keys(row);
-
-       
-        rowNode.find('td').each(function (index) {
-          let columnName = columns[index];
+window.editRow = function (rowData) {
+  const row = JSON.parse(decodeURIComponent(rowData));
+  reloadtimeinterval = false;
+  ////console.log(reloadtimeinterval);
+  //console.log("Editing Row:", row);
+  let id ;
+  // Find the row in DataTables
+  let rowIndex = dataTableInstance.rows().indexes().filter(index => {
+    id = row['id'];
+    return dataTableInstance.row(index).data()['id'] === row['id'];
+  })[0];
+  
+  if (rowIndex === undefined) {
+    console.error("Row not found in table!");
+    return;
+  }
+  
+  let rowNode = $(dataTableInstance.row(rowIndex).node());
+  //console.log(rowNode);
+  let columns = Object.keys(row);
+  
+  
+  rowNode.find('td').each(function (index) {
+    let columnName = columns[index];
           let currentValue = $(this).text().trim();
 
           
-
+          
           let inputElement;
           if (columnName === "Last Visit Date" || columnName === "Prior Auth Expiry Date") {
             // Date input field
@@ -1794,12 +1803,12 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
             // Color dropdown selector with custom CSS class
             inputElement += `
                 <select class="edit-input custom-drop small-color-picker">
-                    <option value="" ${currentValue === "" ? "selected" : ""}>No Color</option>
-                    <option value="#ffffff" ${currentValue === "#ffffff" ? "selected" : ""}>White</option>
-                    <option value="#d9a59b" ${currentValue === "#d9a59b" ? "selected" : ""}>Red</option>
-                    <option value="#d9d2e9" ${currentValue === "#d9d2e9" ? "selected" : ""}>Purple</option>
-                </select>
-            `;
+                  <option value="" ${currentValue === "" ? "selected" : ""}>No Color</option>
+                  <option value="#ffffff" ${currentValue === "#ffffff" ? "selected" : ""}>White</option>
+                  <option value="#d9a59b" ${currentValue === "#d9a59b" ? "selected" : ""}>Red</option>
+                  <option value="#d9d2e9" ${currentValue === "#d9d2e9" ? "selected" : ""}>Purple</option>
+                  </select>
+                  `;
         } else if (columnName === "BIMS score") {
             // Dropdown for BIMS Score
             inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
@@ -1812,9 +1821,9 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
 
             inputElement = `<select class="edit-input custom-drop">${generateOptions([
              "Select", "Biopsych Assessment", "CBT/ Psychotherapy", "Full Cognitive Exam", "Initial Med Visit",
-              "Followup Med Visit", "Consult", "Pain Management", "SUD/Biopsychosocial assessment",
-              "SUD/Med Visit", "SUD Intake", "SUD/CBT", "SUD Follow-up", "SUD Consult", "Initial Psych",
-              "IOP Group Therapy", "IOP CBT", "PHP Group Therapy", "PHP CBT"
+             "Followup Med Visit", "Consult", "Pain Management", "SUD/Biopsychosocial assessment",
+             "SUD/Med Visit", "SUD Intake", "SUD/CBT", "SUD Follow-up", "SUD Consult", "Initial Psych",
+             "IOP Group Therapy", "IOP CBT", "PHP Group Therapy", "PHP CBT"
             ], currentValue)}</select>`;
           } else if (columnName === "Programs") {
             // Dropdown for Programs
@@ -1828,87 +1837,87 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
             $(this).html(inputElement);
           }
         });
-
+        
         // Replace action buttons with "Save" and "Cancel"
         rowNode.find('td:last').html(`
         <div class="action-buttons">
-            <button class="save-btn">Save</button>
-            <button class="cancel-btn">Cancel</button>
-        </div>
-    `);
-   
-        // Handle "Save" click
-        rowNode.find('.save-btn').off('click').on('click', function () {
-    let updatedData = { id: id }; // Initialize with ID directly
-    const sheetName = $('#sheetSelector').val();
-
-    rowNode.find('td').each(function (index) {
-        const columnName = columns[index];
-        if (columnName === "Actions") return;
-
-        let inputElement = $(this).find('input, select');
-        let newValue = inputElement.val();
-
-        // Handle date fields
-        if (["Last Visit Date", "Prior Auth Expiry Date"].includes(columnName)) {
-            updatedData[columnName] = newValue ? convertToUSDate(newValue) : row[columnName];
+          <button class="save-btn">Save</button>
+          <button class="cancel-btn">Cancel</button>
+          </div>
+          `);
+          
+          // Handle "Save" click
+          rowNode.find('.save-btn').off('click').on('click', function () {
+            let updatedData = { id: id }; // Initialize with ID directly
+            const sheetName = $('#sheetSelector').val();
+            
+            rowNode.find('td').each(function (index) {
+              const columnName = columns[index];
+              if (columnName === "Actions") return;
+              
+              let inputElement = $(this).find('input, select');
+              let newValue = inputElement.val();
+              
+              // Handle date fields
+              if (["Last Visit Date", "Prior Auth Expiry Date"].includes(columnName)) {
+                updatedData[columnName] = newValue ? convertToUSDate(newValue) : row[columnName];
         } else {
             updatedData[columnName] = newValue || row[columnName];
         }
-
+        
         // Handle background color for "Resident Full Name"
         if (columnName === "Resident Full Name") {
-            const selectedColor = rowNode.find('select.small-color-picker').val();
-            updatedData["Resident Full Name Background"] = selectedColor;
-            $(this).css('background-color', selectedColor);
+          const selectedColor = rowNode.find('select.small-color-picker').val();
+          updatedData["Resident Full Name Background"] = selectedColor;
+          $(this).css('background-color', selectedColor);
         }
     });
 
     //console.log("Updated Data:", updatedData);
-
+    
     // Send updated data to Google Sheets
     $.ajax({
-        url: apiUrl+"/editData",
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            action: 'update',
+      url: apiUrl+"/editData",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        action: 'update',
             sheet_name: sheetName,
             newData: updatedData
         }),
         success: function (response) {
-            if (response.success) {
-                alert("Row updated successfully!");
-                dataTableInstance.row(rowIndex).data(updatedData).draw(false);
-                reloadtimeinterval = true;
-            } else {
-                reloadtimeinterval = true;
-                alert("Failed to update row: " + response.message);
+          if (response.success) {
+            alert("Row updated successfully!");
+            dataTableInstance.row(rowIndex).data(updatedData).draw(false);
+            reloadtimeinterval = true;
+          } else {
+            reloadtimeinterval = true;
+            alert("Failed to update row: " + response.message);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            reloadtimeinterval = true;
-            alert(`Error: ${textStatus} - ${errorThrown}`);
+          reloadtimeinterval = true;
+          alert(`Error: ${textStatus} - ${errorThrown}`);
         }
     });
-});
-
-// Handle "Cancel" click (Revert changes)
-rowNode.find('.cancel-btn').off('click').on('click', function () {
+  });
+  
+  // Handle "Cancel" click (Revert changes)
+  rowNode.find('.cancel-btn').off('click').on('click', function () {
     dataTableInstance.row(rowIndex).data(row).draw(false);
     reloadtimeinterval = true;
-});
-      }
+  });
+}
 
-      /// Utility function to convert MM/DD/YYYY to YYYY-MM-DD for <input type="date">
-      function convertToISODate(dateString) {
-        const parts = dateString.split('/');
-        if (parts.length === 3) {
-          const [month, day, year] = parts.map(Number);
-          return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        }
-        return "";
-      }
+/// Utility function to convert MM/DD/YYYY to YYYY-MM-DD for <input type="date">
+function convertToISODate(dateString) {
+  const parts = dateString.split('/');
+  if (parts.length === 3) {
+    const [month, day, year] = parts.map(Number);
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+  return "";
+}
 
       // Utility function to convert YYYY-MM-DD back to MM/DD/YYYY for saving
       function convertToUSDate(isoDate) {
@@ -1919,12 +1928,12 @@ rowNode.find('.cancel-btn').off('click').on('click', function () {
         }
         return isoDate;
       }
-
+      
       // Utility function to generate <option> elements for dropdowns
-      function generateOptions(optionsArray, selectedValue) {
+        function generateOptions(optionsArray, selectedValue) {
         return optionsArray.map(option => `<option value="${option}" ${option === selectedValue ? "selected" : ""}>${option}</option>`).join('');
       }
-
+      
       window.deleteRow = function (rowData) {
         const row = JSON.parse(decodeURIComponent(rowData));
         reloadtimeinterval = false;
@@ -1936,39 +1945,39 @@ let dischargeDate = prompt("Enter Discharge Date (MM/DD/YYYY) or leave blank to 
 
 // Check if the user entered a discharge date
 if (dischargeDate !== null && dischargeDate.trim() !== "") { 
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dischargeDate)) {
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dischargeDate)) {
         alert("Invalid date format! Please use MM/DD/YYYY.");
         deleteconfirmation = false; // Corrected variable case
+      }
     }
-}
-
-if (deleteconfirmation) {
-    if (!confirm("Are you sure you want to delete this row? This action cannot be undone.")) {
+    
+    if (deleteconfirmation) {
+      if (!confirm("Are you sure you want to delete this row? This action cannot be undone.")) {
         deleteconfirmation = false;
+      }
     }
-}
-        // Find the row index in DataTables
-        let rowIndex = dataTableInstance.rows().indexes().filter(index => {
-          return dataTableInstance.row(index).data()['id'] === row['id'];
-        })[0];
-
+    // Find the row index in DataTables
+    let rowIndex = dataTableInstance.rows().indexes().filter(index => {
+      return dataTableInstance.row(index).data()['id'] === row['id'];
+    })[0];
+    
         if (rowIndex === undefined) {
           console.error("Row not found in table!");
           deleteconfirmation = false;
           reloadtimeinterval = true;
-  
+          
         }
         //console.log("fuction called sucesfully")
-
-
+        
+        
         //console.log(row);
-
+        
         if(deleteconfirmation){
-
+          
           $.ajax({
-       url: apiUrl+"/deleteData",
+            url: apiUrl+"/deleteData",
             method: 'POST',
-    contentType: 'application/json',
+            contentType: 'application/json',
     data: JSON.stringify({
         sheet_name: $('#sheetSelector').val(),
         rowData: row,
@@ -1977,25 +1986,25 @@ if (deleteconfirmation) {
     success: async function (response) {
         //console.log('Response:', response);
         if (response.success) {
-            await alert("Row deleted successfully!");
+          await alert("Row deleted successfully!");
             await fetchData();
             reloadtimeinterval = true;
-        } else {
+          } else {
             alert("Failed to delete row: " + response.message);
             reloadtimeinterval = true;
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          reloadtimeinterval = true;
+          alert(`Error: ${textStatus} - ${errorThrown}`);
         }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-        reloadtimeinterval = true;
-        alert(`Error: ${textStatus} - ${errorThrown}`);
-    }
-});
+      });
 
         }
         
       };
     });
-
+    
     // dataTableInstance.row(rowIndex).remove().draw(false); // Remove row from DataTable
     
     </script>
