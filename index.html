@@ -1228,7 +1228,6 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             }else{
               completeRow['Eligible for SUD']=" NO";
             }
-            
             if (completeRow['Discharge Date'] && completeRow['Discharge Date'].trim() !== "") {
               const date = new Date(completeRow['Discharge Date']);
               
@@ -1241,7 +1240,9 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               }
             }
             
-            
+            if(completeRow['BIMS score']===''){
+                completeRow['Eligible for CBT'] = ""
+            }else
             if (
               (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
               completeRow['BIMS score'] === 99 ||
@@ -1251,8 +1252,6 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               completeRow['Eligible for CBT'] = "No";
             } else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
               completeRow['Eligible for CBT'] = "Yes";
-            } else{
-              completeRow['Eligible for CBT'] = "";
             }
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
