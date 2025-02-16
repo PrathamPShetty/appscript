@@ -1223,7 +1223,11 @@
             }else{
               completeRow['Eligible for SUD']=" NO";
             }
-            console.log(completeRow['Discharge Date'])
+            //console.log(completeRow['Discharge Date'])
+            const date = new Date(completeRow['Discharge Date']);
+            completeRow['Discharge Date'] = `${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(2, '0')}/${date.getUTCFullYear()}`;
+
+
             if (
   (completeRow['BIMS score'] >= 0 && completeRow['BIMS score'] <= 7) ||
   completeRow['BIMS score'] === 99 ||
