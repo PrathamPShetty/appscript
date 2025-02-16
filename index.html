@@ -1251,6 +1251,8 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
               completeRow['Eligible for CBT'] = "No";
             } else if (completeRow['BIMS score'] >= 8 && completeRow['BIMS score'] <= 15) {
               completeRow['Eligible for CBT'] = "Yes";
+            } else{
+              completeRow['Eligible for CBT'] = "";
             }
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
@@ -1266,6 +1268,10 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             // Reset 'Last Visit Type' if 'Select' is chosen
             if (completeRow['Last Visit Type']?.toLowerCase() === "select") {
               completeRow['Last Visit Type'] = " ";
+            }
+
+            if (completeRow['Biopsychosocial Assessment']?.toLowerCase() === "select") {
+              completeRow['Biopsychosocial Assessment'] = " ";
             }
             
             return hasData ? completeRow : null; // Keep row if it has data, otherwise return null
@@ -1889,10 +1895,11 @@ window.editRow = function (rowData) {
             sheet_name: sheetName,
             newData: updatedData
         }),
-        success: function (response) {
+        success: async function (response) {
           if (response.success) {
             alert("Row updated successfully!");
             dataTableInstance.row(rowIndex).data(updatedData).draw(false);
+            await fetchData();
             reloadtimeinterval = true;
           } else {
             reloadtimeinterval = true;
