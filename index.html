@@ -1614,11 +1614,11 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
         } else {
           eligible = "Invalid input";
         }
-        let suddx;
+        // let suddx;
         let eligibleForSUDCBT;
         if (document.getElementById('suddx').value === '' ) {
           eligibleForSUDCBT = "Yes";
-          suddx = "";
+    
         } else {
           eligibleForSUDCBT = "No";
         }
@@ -1632,7 +1632,7 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
           'Eligible for CBT': eligible,
           'Biopsychosocial Assessment': document.getElementById('biopsychosocialAssessment').value,
           'Eligible for SUD': eligibleForSUDCBT,
-          'SUD DX': suddx,
+          'SUD DX': document.getElementById('suddx').value ||"",
           'Eligible for SUD CBT': eligibleForSUDCBT,
           'Programs': document.getElementById('programs').value,
           'Last Visit Type': document.getElementById('LastVisitType').value,
