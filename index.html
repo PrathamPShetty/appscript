@@ -583,7 +583,7 @@
     }
 
     .wait-message {
-      color: #ff0000;
+      color: #d9a59b;
       font-weight: bold;
       margin-right: 10px;
       display: none;
@@ -802,11 +802,11 @@
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
           <label>
-              <input type="radio" name="color" value="#ff0000"> Red
+              <input type="radio" name="color" value="#d9a59b"> Red
           </label>
       
           <label>
-              <input type="radio" name="color" value="#d9d2e9"> Purple
+              <input type="radio" name="color" value="#d0a4f5"> Purple
           </label>
       
           <label>
@@ -1346,7 +1346,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       $colorFilter.on('change', function() {
         // Define the columns and color mapping
         const columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
-        const colorMapping = { "": "", Red: '#ff0000', Purple: '#d9d2e9', White: '#ffffff' };
+        const colorMapping = { "": "", Red: '#d9a59b', Purple: '#d0a4f5', White: '#ffffff' };
     
         const selectedColor = $(this).val(); // Get the selected color from the dropdown
         const searchTerm = colorMapping[selectedColor] || selectedColor; // Map color name to hex code, or use as-is
@@ -1768,8 +1768,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
                 <select class="edit-input custom-drop small-color-picker">
                     <option value="" ${currentValue === "" ? "selected" : ""}>No Color</option>
                     <option value="#ffffff" ${currentValue === "#ffffff" ? "selected" : ""}>White</option>
-                    <option value="#ff0000" ${currentValue === "#ff0000" ? "selected" : ""}>Red</option>
-                    <option value="#d9d2e9" ${currentValue === "#d9d2e9" ? "selected" : ""}>Purple</option>
+                    <option value="#d9a59b" ${currentValue === "#d9a59b" ? "selected" : ""}>Red</option>
+                    <option value="#d0a4f5" ${currentValue === "#d0a4f5" ? "selected" : ""}>Purple</option>
                 </select>
             `;
         } else if (columnName === "BIMS score") {
