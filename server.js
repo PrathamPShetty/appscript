@@ -352,6 +352,8 @@ app.post("/editData", async (req, res) => {
       return res.status(400).json({ success: false, message: "Missing required fields: sheet_name or id" });
     }
 
+    newData['Resident Full Name Background']= newData['Background'];
+
     // Prepare the update object dynamically
     let updateFields = {};
     for (const [key, value] of Object.entries(newData)) {
@@ -359,6 +361,8 @@ app.post("/editData", async (req, res) => {
         updateFields[`sheet_data.$.${key}`] = value;
       }
     }
+
+    
 
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ success: false, message: "No valid fields to update" });

@@ -1864,16 +1864,20 @@ window.editRow = function (rowData) {
         } else {
             updatedData[columnName] = newValue || row[columnName];
         }
+
+  
         
         // Handle background color for "Resident Full Name"
         if (columnName === "Resident Full Name") {
           const selectedColor = rowNode.find('select.small-color-picker').val();
-          updatedData["Resident Full Name Background"] = selectedColor;
+          console.log(selectedColor);
+          updatedData["Background"] = selectedColor;
           $(this).css('background-color', selectedColor);
+       
         }
     });
 
-    //console.log("Updated Data:", updatedData);
+    console.log("Updated Data:", updatedData);
     
     // Send updated data to Google Sheets
     $.ajax({
