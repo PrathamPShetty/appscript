@@ -1194,7 +1194,18 @@
           $alertButton.hide();
         }
       
-        let columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date','Discharge Date', 'Last Visit Type', 'Programs'];
+        let columnArray = [
+  'PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 
+  'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 
+  'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 
+  'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'
+];
+
+// Add "Discharge Date" if sheet name includes "discharge_"
+if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
+  columnArray.push('Discharge Date');
+}
+
         
         let filteredData = sheet.sheet_data
           .map(row => {
