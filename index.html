@@ -1220,12 +1220,15 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             completeRow['id'] = row['id'];
-            if(completeRow['SUD DX']==="NA"
-            ){
-              completeRow['Eligible for SUD']="Yes";
-            }else{
-              completeRow['Eligible for SUD']=" NO";
-            }
+            if (completeRow['SUD DX'] === "NA") {
+  completeRow['Eligible for SUD'] = "Yes";
+} else if (completeRow['SUD DX'] !== "NA") {
+  completeRow['Eligible for SUD'] = "No";
+} else {
+  completeRow['Eligible for SUD'] = "";
+}
+
+
             if (completeRow['Discharge Date'] && completeRow['Discharge Date'].trim() !== "") {
               const date = new Date(completeRow['Discharge Date']);
               
@@ -1257,7 +1260,7 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
             }else{
-              completeRow['Eligible for SUD CBT']="No";
+              completeRow['Eligible for SUD CBT']="";
             }
             // Reset 'Programs' if 'Select' is chosen
             if (completeRow['Programs']?.toLowerCase() === "select") {
