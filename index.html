@@ -1216,9 +1216,18 @@
             }else{
               completeRow['Eligible for SUD']=" NO";
             }
+            
             // //console.log(completeRow['Discharge Date'])
-            // const date = new Date(completeRow['Discharge Date']);
-            // completeRow['Discharge Date'] = `${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(2, '0')}/${date.getUTCFullYear()}`;
+            if (completeRow['Discharge Date'] && completeRow['Discharge Date'].trim() !== "") {
+    const date = new Date(completeRow['Discharge Date']);
+    
+    // Ensure the date is valid before formatting
+    if (!isNaN(date.getTime())) {
+        completeRow['Discharge Date'] = `${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(2, '0')}/${date.getUTCFullYear()}`;
+    } else {
+        console.error("Invalid date:", completeRow['Discharge Date']);
+    }
+}
 
 
             if (
