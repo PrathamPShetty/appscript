@@ -1027,8 +1027,8 @@
         for (let i = 0; i < sheet_data.length; i++) {
           if (sheet_data[i]['Prior Auth Expiry Date']) {
             const [month, day, year] = sheet_data[i]['Prior Auth Expiry Date'].split("/").map(Number);
-            //console.log(month, day, year);
-           // console.log(sheet_data[i]['Prior Auth Expiry Date']);
+            ////console.log(month, day, year);
+           // //console.log(sheet_data[i]['Prior Auth Expiry Date']);
             const expiryDate = new Date(year, month - 1, day);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -1041,7 +1041,7 @@
                 $('#alertTableClose').on('click', function () {
                   $alertTable.hide();
                 });
-               // console.log('Alert Button Clicked');
+               // //console.log('Alert Button Clicked');
                 $alertTable.show();
                 const alertTable = $('#alertTable').DataTable({
                   responsive: false,
@@ -1092,7 +1092,7 @@
 
       $.getJSON(apiUrl+"/get-sheet", function (data) {
         hideLoading();
-       console.log(data);
+       //console.log(data);
         if (data && data.length > 0) {
           sheetsData = data;
           const savedSheet = localStorage.getItem('selectedSheet');
@@ -1105,7 +1105,7 @@
         }
       }).fail(function (e) {
         hideLoading();
-        console.log(e);
+        //console.log(e);
         alert("Failed to fetch data from the API.");
       });
   
@@ -1121,7 +1121,7 @@
       function fetchData() {
      
           $.getJSON(apiUrl+"/get-sheets", function (data) {
-            console.log(data);
+            //console.log(data);
             if (data && data.length > 0) {
               sheetsData = data;
               const savedSheet = localStorage.getItem('selectedSheet');
@@ -1129,15 +1129,15 @@
               const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === savedSheet) || data[0];
               loadSheetData(selectedSheet);
               reloadtimeinterval = true;
-              //console.log(reloadtimeinterval);
+              ////console.log(reloadtimeinterval);
             } else {
               reloadtimeinterval = true;
-              //console.log(reloadtimeinterval);
+              ////console.log(reloadtimeinterval);
              // alert("No data found!");
             }
           }).fail(function (e) {
             
-            console.log(e);
+            //console.log(e);
             alert("Failed to fetch data from the API.");
           });  
         
@@ -1176,8 +1176,8 @@
 
       function loadSheetData(sheet) {
         if (!sheet ) return;
-        console.log("sheet name"+sheet.sheet_name);
-        console.log("sheet name"+sheet.sheet_data);
+        //console.log("sheet name"+sheet.sheet_name);
+        //console.log("sheet name"+sheet.sheet_data);
       
         if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
           $isDischarge.val('2');
@@ -1217,7 +1217,7 @@
               completeRow['Eligible for SUD']=" NO";
             }
             
-            // //console.log(completeRow['Discharge Date'])
+            // ////console.log(completeRow['Discharge Date'])
             if (completeRow['Discharge Date'] && completeRow['Discharge Date'].trim() !== "") {
     const date = new Date(completeRow['Discharge Date']);
     
@@ -1250,7 +1250,7 @@
 if (completeRow['Programs']?.toLowerCase() === "select") {
   completeRow['Programs'] = " ";
 }
-console.log(completeRow['Programs']);
+//console.log(completeRow['Programs']);
 // Reset 'Last Visit Type' if 'Select' is chosen
 if (completeRow['Last Visit Type']?.toLowerCase() === "select") {
   completeRow['Last Visit Type'] = " ";
@@ -1420,7 +1420,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       
         const searchTerm = bimsMapping[selectedBims] || "";
 
-        console.log(searchTerm);
+        //console.log(searchTerm);
       
         dataTableInstance.columns(5).search('^' + searchTerm + '$', true, false).draw();
 
@@ -1479,7 +1479,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       let data =  document.getElementById('newsheet').value
      
 
-      console.log(data);
+      //console.log(data);
 
       $.ajax({
     url: apiUrl + "/addnewSheetName",
@@ -1487,7 +1487,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
     contentType: "application/json",
     data: JSON.stringify({ sheet_name: data }),  // Correct key and structure
     success: function (response) {
-        console.log(response);
+        //console.log(response);
         waitMessage.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.style.opacity = '1';
@@ -1549,7 +1549,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
 //       return response.json();
 //     })
 //     .then(data => {
-//       console.log(data.message); // Or display the message in the UI
+//       //console.log(data.message); // Or display the message in the UI
 //       alert(data.message); // Show a success message to the user
 //       document.getElementById('newsheet').value = ''; // Clear the input field
 //     })
@@ -1568,7 +1568,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       addForm.onsubmit = function (e) {
         e.preventDefault();
         reloadtimeinterval = false;
-        //console.log(reloadtimeinterval);
+        ////console.log(reloadtimeinterval);
 
         // Show wait message and disable submit button
         const waitMessage = document.querySelector('.wait-message');
@@ -1577,8 +1577,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
        
-      //  console.log(document.getElementById('bimsScore').value);
-       // console.log(typeof document.getElementById('bimsScore').value);
+      //  //console.log(document.getElementById('bimsScore').value);
+       // //console.log(typeof document.getElementById('bimsScore').value);
         let eligible;
         if ((document.getElementById('bimsScore').value >= 0 && document.getElementById('bimsScore').value <= 7) || document.getElementById('bimsScore').value === '99' || document.getElementById('bimsScore').value === "Not Cognitive") {
           eligible = "No";
@@ -1614,15 +1614,15 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           'Resident Full Name Background': document.querySelector('input[name="color"]:checked')?.value
         };
 
-      //  console.log(newData);
-       // console.log(newData.Color);
+      //  //console.log(newData);
+       // //console.log(newData.Color);
 
       // $.getJSON(apiUrl + "?action=add" +
       //     "&sheet_name=" + encodeURIComponent($('#sheetSelector').val()) +
       //     "&data=" + encodeURIComponent(JSON.stringify(newData)) +
       //     "&callback=?")
       //     .done( async function (response) {
-      //       console.log(response)
+      //       //console.log(response)
       //       if (response.success) {
           
       //         modal.style.display = "none";  
@@ -1664,7 +1664,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           data: newData
         }),
         success: async function (response) {
-          console.log(response);
+          //console.log(response);
           if (response.success) {
             modal.style.display = "none";
             addForm.reset();
@@ -1706,8 +1706,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       window.reAdmitRow = function (rowData) {
         const row = JSON.parse(decodeURIComponent(rowData));
         reloadtimeinterval = false;
-        //console.log(reloadtimeinterval);
-        console.log("Readmitting Row:", row);
+        ////console.log(reloadtimeinterval);
+        //console.log("Readmitting Row:", row);
         let rowIndex = dataTableInstance.rows().indexes().filter(index => {
           return dataTableInstance.row(index).data()['Resident Full Name'] === row['Resident Full Name'];
         })[0];
@@ -1722,7 +1722,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
     rowData: row
   }),
   success: async function(response) {
-    console.log(response);
+    //console.log(response);
     if (response.success) {
       alert("Readmitted successfully!");
       dataTableInstance.row(rowIndex).remove().draw(false);
@@ -1746,8 +1746,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
       window.editRow = function (rowData) {
         const row = JSON.parse(decodeURIComponent(rowData));
         reloadtimeinterval = false;
-        //console.log(reloadtimeinterval);
-        console.log("Editing Row:", row);
+        ////console.log(reloadtimeinterval);
+        //console.log("Editing Row:", row);
         let id ;
         // Find the row in DataTables
         let rowIndex = dataTableInstance.rows().indexes().filter(index => {
@@ -1761,7 +1761,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         }
     
         let rowNode = $(dataTableInstance.row(rowIndex).node());
-        console.log(rowNode);
+        //console.log(rowNode);
         let columns = Object.keys(row);
 
        
@@ -1852,7 +1852,7 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
         }
     });
 
-    console.log("Updated Data:", updatedData);
+    //console.log("Updated Data:", updatedData);
 
     // Send updated data to Google Sheets
     $.ajax({
@@ -1916,8 +1916,8 @@ rowNode.find('.cancel-btn').off('click').on('click', function () {
       window.deleteRow = function (rowData) {
         const row = JSON.parse(decodeURIComponent(rowData));
         reloadtimeinterval = false;
-        //console.log(reloadtimeinterval);
-        console.log("Deleting Row:", row);
+        ////console.log(reloadtimeinterval);
+        //console.log("Deleting Row:", row);
 
 let deleteconfirmation = true;
 let dischargeDate = prompt("Enter Discharge Date (MM/DD/YYYY) or leave blank to skip:");
@@ -1946,10 +1946,10 @@ if (deleteconfirmation) {
           reloadtimeinterval = true;
   
         }
-        console.log("fuction called sucesfully")
+        //console.log("fuction called sucesfully")
 
 
-        console.log(row);
+        //console.log(row);
 
         if(deleteconfirmation){
 
@@ -1963,7 +1963,7 @@ if (deleteconfirmation) {
         dischargeDate: dischargeDate || ""
     }),
     success: async function (response) {
-        console.log('Response:', response);
+        //console.log('Response:', response);
         if (response.success) {
             await alert("Row deleted successfully!");
             await fetchData();
