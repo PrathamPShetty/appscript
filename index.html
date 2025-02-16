@@ -719,7 +719,7 @@
         <div class="filter-group" style="flex: 1 1 200px;">
           <label for="bimsFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">BIMS Filter:</label>
           <select id="bimsFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
-            <option value="">Select</option>
+            <option value="">All</option>
             <option value="null">Null</option>
             <option value="0-7">0-7</option>
             <option value="8-15">8-15</option>
@@ -1397,7 +1397,8 @@ if ($.fn.dataTable.isDataTable($dataTable)) {
           "8-15": "8|9|10|11|12|13|14|15", // Regex to match values 8 to 15
           "99": "99", // Exact match for 99
           "NC": "Not Cognitive", // Exact match for NC
-          "null": "" // Empty string for "All" (no filter)
+          "null": "" ,
+          "":"1|2|3|4|5|6|7|8|9|0|Not Cognitve"
         };
 
        
