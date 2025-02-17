@@ -1776,7 +1776,7 @@ window.editRow = function (rowData) {
   const row = JSON.parse(decodeURIComponent(rowData));
   reloadtimeinterval = false;
   ////console.log(reloadtimeinterval);
-  //console.log("Editing Row:", row);
+  console.log("Editing Row:", row);
   let id ;
   // Find the row in DataTables
   let rowIndex = dataTableInstance.rows().indexes().filter(index => {
@@ -1817,6 +1817,10 @@ window.editRow = function (rowData) {
                   <option value="#d9d2e9" ${currentValue === "#d9d2e9" ? "selected" : ""}>Purple</option>
                   </select>
                   `;
+        }  else if (columnName === "SUD DX") {
+         
+            inputElement = `<input type="text" class="edit-input" value="${currentValue}">`;
+            
         } else if (columnName === "BIMS score") {
             // Dropdown for BIMS Score
             inputElement = `<select class="edit-input custom-drop">${generateOptions([ "Select","0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "99", "Not Cognitive"], currentValue)}</select>`;
