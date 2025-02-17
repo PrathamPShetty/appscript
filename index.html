@@ -1259,7 +1259,11 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
-            } if(completeRow['Eligible for SUD']==="No" && completeRow['Eligible for CBT']==="No" ){
+            }else if(completeRow['Eligible for SUD']==="No" && completeRow['Eligible for CBT']==="No" ){
+              completeRow['Eligible for SUD CBT']="No";
+            }else if(completeRow['Eligible for SUD']==="No" && completeRow['Eligible for CBT']==="Yes" ){
+              completeRow['Eligible for SUD CBT']="No";
+            }else if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="No" ){
               completeRow['Eligible for SUD CBT']="No";
             }else{
               completeRow['Eligible for SUD CBT']="";
