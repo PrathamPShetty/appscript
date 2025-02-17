@@ -1259,6 +1259,8 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             
             if(completeRow['Eligible for SUD']==="Yes" && completeRow['Eligible for CBT']==="Yes" ){
               completeRow['Eligible for SUD CBT']="Yes";
+            } if(completeRow['Eligible for SUD']==="NO" && completeRow['Eligible for CBT']==="nO" ){
+              completeRow['Eligible for SUD CBT']="No";
             }else{
               completeRow['Eligible for SUD CBT']="";
             }
