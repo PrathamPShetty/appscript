@@ -1221,11 +1221,11 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             completeRow['Resident Full Name Background'] = row['Resident Full Name Background'];
             completeRow['id'] = row['id'];
             if (completeRow['SUD DX'] === "NA") {
-  completeRow['Eligible for SUD'] = "Yes";
+  completeRow['Eligible for SUD'] = "No";
 } else if (completeRow['SUD DX'] === "" || completeRow['SUD DX'] === null) {
   completeRow['Eligible for SUD'] = "";
 } else {
-  completeRow['Eligible for SUD'] = "No";
+  completeRow['Eligible for SUD'] = "Yes";
 }
 
 
