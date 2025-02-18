@@ -709,10 +709,13 @@
         <div class="filter-group" style="flex: 1 1 200px;">
           <label for="colorFilter" class="drop-down" style="margin-right: 10px; font-weight: 500;">Color Filter:</label>
           <select id="colorFilter" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; width: 50%;">
-              <option value="">All Color</option>
-              <option value="Red">Red</option>
-              <option value="Purple">Purple</option>
-              <option value="White">White</option>
+            <option value="">All Colors</option>
+            <option value="Red">Red</option>
+            <option value="Purple">Purple</option>
+            <option value="White">White</option>
+            <option value="RedPurple">Red/Purple</option>
+            <option value="RedWhite">Red/White</option>
+            <option value="PurpleWhite">Purple/White</option>
           </select>
         </div>
       
@@ -1111,9 +1114,9 @@
       });
   
       function reset(){
-        localStorage.setItem('selectedSheet','Anchorage Nursing');
+       fetchData();
 
-        location.reload();
+        console.log("refresh");
       }
       window.reset=reset
 
@@ -1382,7 +1385,9 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
             const backgroundColor = data['Resident Full Name Background'];
             if (backgroundColor) {
               const cell = $(row).find('td').eq(columnArray.indexOf('Resident Full Name'));
+              const cell1 = $(row).find('td').eq(columnArray.indexOf('PAYER'));
               cell.css('background-color', backgroundColor);
+              cell1.css('background-color', backgroundColor);
             }
         }
       });
@@ -1396,31 +1401,40 @@ if (sheet.sheet_name.toLowerCase().includes("discharge_")) {
   $colorFilter.on('change', function() {
     // Define the columns and color mapping
         const columnArray = ['PAYER', 'Prior Auth Expiry Date', 'Unit', 'Room Number', 'Resident Full Name', 'BIMS score', 'Biopsychosocial Assessment', 'SUD DX', 'Eligible for CBT', 'Eligible for SUD', 'Eligible for SUD CBT', 'Last Visit Date', 'Last Visit Type', 'Programs'];
-        const colorMapping = { "": "", Red: '#d9a59b', Purple: '#d9d2e9', White: '#ffffff' };
-    
-        const selectedColor = $(this).val(); // Get the selected color from the dropdown
-        const searchTerm = colorMapping[selectedColor] || selectedColor; // Map color name to hex code, or use as-is
-    
-        dataTableInstance.rows().every(function() {
-            const rowData = this.data();
-            const bgColor = rowData['Resident Full Name Background'];
-            
-            
-            
-            // If the background color matches or if "All Color" is selected
-            if (bgColor && (searchTerm === "" || bgColor === searchTerm)) {
-              // Show the row and apply background color
-              $(this.node()).show();
-              $(this.node()).find('td').eq(columnArray.indexOf('Resident Full Name')).css('background-color', bgColor);
-            } else {
-              // Hide the row if it doesn't match the selected filter
-              $(this.node()).hide();
-            }
-          });
-          
-          // Redraw the table after the filtering process
-          dataTableInstance.draw();
-        });
+        const colorMapping = {
+        "": "",
+        Red: '#d9a59b',
+        Purple: '#d9d2e9',
+        White: '#ffffff',
+        RedPurple: '#d9a59b|#d9d2e9',
+        RedWhite: '#d9a59b|#ffffff',
+        PurpleWhite: '#d9d2e9|#ffffff',
+    };
+
+    const selectedColor = $(this).val();
+    const searchTerm = colorMapping[selectedColor] || selectedColor;
+
+    dataTableInstance.rows().every(function () {
+        const rowData = this.data();
+        const bgColor = rowData['Resident Full Name Background'];
+
+        // Check if the bgColor matches any of the colors in the pattern
+        const regex = new RegExp(searchTerm);
+        const isMatch = searchTerm === "" || regex.test(bgColor);
+
+        if (isMatch) {
+            $(this.node()).show();
+            $(this.node())
+                .find('td')
+                .eq(columnArray.indexOf('Resident Full Name'))
+                .css('background', bgColor);
+        } else {
+            $(this.node()).hide();
+        }
+    });
+
+    dataTableInstance.draw();
+});
         
         
         
