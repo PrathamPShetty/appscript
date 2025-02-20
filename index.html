@@ -1114,9 +1114,10 @@
       });
   
       function reset(){
-       fetchData();
-
-        console.log("refresh");
+        if (reloadtimeinterval) {
+          reloadtimeinterval=false;
+          fetchData();
+        }
       }
       window.reset=reset
 
@@ -1140,9 +1141,9 @@
              // alert("No data found!");
             }
           }).fail(function (e) {
-            
+            reloadtimeinterval = true;
             //console.log(e);
-            alert("Failed to fetch data from the API.");
+            // alert("Failed to fetch data from the API.");
           });  
         
       }
