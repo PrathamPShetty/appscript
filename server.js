@@ -15,21 +15,16 @@ app.use(cors());
 // app.use(cors({ origin: "https://register.mcceducare.com", credentials: true }));
 
 
-
-
-
-
-mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   connectTimeoutMS: 100000, // 10 seconds
   serverSelectionTimeoutMS: 100000,
   socketTimeoutMS: 20000,
-});
+})
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-
-const db = mongoose.connection;
-db.once("open", () => console.log("Connected to MongoDB"));
 
 // Define Schema & Model
 const sheetSchema = new mongoose.Schema({
