@@ -198,23 +198,41 @@ app.get("/fetchData", async (req, res) => {
   // });
   
 
-
   app.get("/get-sheet", async (req, res) => {
     try {
-      console.log("API Fetching the first 5 records sorted alphabetically (excluding names starting with 'D')...");
-      // db.once("open", () => console.log("Connected to MongoDB"));
+      console.log("API Fetching records in chunks...");
   
-      const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
-      
+      res.setHeader("Content-Type", "application/json");
   
-      console.log("Data loaded successfully");
-      res.json(sheets);
+      // Create a cursor to stream results
+      const cursor = Sheet.find({}, { _id: 0, __v: 0 }).cursor();
+  
+      res.write("["); // Start JSON array
+      let first = true;
+  
+      cursor.on("data", (doc) => {
+        if (!first) res.write(",");
+        res.write(JSON.stringify(doc));
+        first = false;
+      });
+  
+      cursor.on("end", () => {
+        res.write("]"); // End JSON array
+        res.end();
+        console.log("Data sent in chunks successfully.");
+      });
+  
+      cursor.on("error", (err) => {
+        console.error("Error streaming data:", err);
+        res.status(500).json({ message: "Error streaming data", error: err.message });
+      });
   
     } catch (error) {
       console.error("Error fetching data:", error.message);
       res.status(500).json({ message: "Error fetching data", error: error.message });
     }
   });
+  
   
   
 
