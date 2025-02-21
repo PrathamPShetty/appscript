@@ -18,8 +18,8 @@ app.use(cors());
 mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  connectTimeoutMS: 100000, // 10 seconds
-  serverSelectionTimeoutMS: 100000,
+  connectTimeoutMS: 30000, // 10 seconds
+  serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 20000,
 })
   .then(() => console.log("✅ Connected to MongoDB"))
