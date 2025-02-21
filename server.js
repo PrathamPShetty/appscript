@@ -19,13 +19,14 @@ app.use(cors());
 
 
 
-mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   connectTimeoutMS: 100000, // 10 seconds
   serverSelectionTimeoutMS: 10000,
   socketTimeoutMS: 20000,
 });
+
 
 const db = mongoose.connection;
 db.once("open", () => console.log("Connected to MongoDB"));
