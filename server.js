@@ -21,8 +21,7 @@ mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.
   connectTimeoutMS: 30000, // 10 seconds
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 20000,
-  keepAlive: true,
-  keepAliveInitialDelay: 300000,
+
 })
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ MongoDB Connection Error:", err));
