@@ -131,7 +131,7 @@ async function fetchAndStoreData() {
 app.get("/fetchData", async (req, res) => {
   try {
     console.log("API Fetching data...");
-    db.once("open", () => console.log("Connected to MongoDB"));
+    // db.once("open", () => console.log("Connected to MongoDB"));
 
     const apiUrl = "https://script.google.com/macros/s/AKfycbwylAWS4nuKA3BeLmLgKzricJ-9kZVCEhQva4qP4l9rXyDVhr0k-TIzMHcZZmLqk0UN/exec"; 
     const response = await axios.get(apiUrl);
@@ -202,7 +202,7 @@ app.get("/fetchData", async (req, res) => {
   app.get("/get-sheet", async (req, res) => {
     try {
       console.log("API Fetching the first 5 records sorted alphabetically (excluding names starting with 'D')...");
-      db.once("open", () => console.log("Connected to MongoDB"));
+      // db.once("open", () => console.log("Connected to MongoDB"));
   
       const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
       
@@ -221,7 +221,7 @@ app.get("/fetchData", async (req, res) => {
 app.get("/get-sheets", async (req, res) => {
   try {
     console.log("Api Fetching data...");
-    db.once("open", () => console.log("Connected to MongoDB"));
+    // db.once("open", () => console.log("Connected to MongoDB"));
     const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
     console.log("data loading");
     res.json(sheets);
@@ -235,7 +235,7 @@ app.get("/get-sheets", async (req, res) => {
 app.post("/addData", async (req, res) => { 
   try {
     const { sheet_name, data } = req.body;
-    db.once("open", () => console.log("Connected to MongoDB"));
+    // db.once("open", () => console.log("Connected to MongoDB"));
 
     if (!sheet_name || !data) { 
       return res.status(400).json({ success: false, message: "Missing required fields" });
