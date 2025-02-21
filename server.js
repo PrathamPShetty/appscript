@@ -208,13 +208,8 @@ app.get("/fetchData", async (req, res) => {
       console.log("API Fetching the first 5 records sorted alphabetically (excluding names starting with 'D')...");
       db.once("open", () => console.log("Connected to MongoDB"));
   
-      // Fetch the first 5 documents sorted alphabetically but excluding those starting with 'D'
-      const sheets = await Sheet.find(
-        { sheet_name: { $not: /^D/ } }, // Exclude names starting with 'D'
-        { _id: 0, __v: 0 }
-      )
-      .sort({ sheet_name: 1 })  // Sort alphabetically (ascending)
-      .limit(5);
+      const sheets = await Sheet.find({}, { _id: 0, __v: 0 });
+      
   
       console.log("Data loaded successfully");
       res.json(sheets);
