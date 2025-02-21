@@ -21,6 +21,8 @@ mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.
   connectTimeoutMS: 30000, // 10 seconds
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 20000,
+  keepAlive: true,
+  keepAliveInitialDelay: 300000,
 })
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ MongoDB Connection Error:", err));
@@ -197,14 +199,12 @@ app.get("/fetchData", async (req, res) => {
   //   }
   // });
   
-
   app.get("/get-sheet", async (req, res) => {
     try {
       console.log("API Fetching records in chunks...");
   
       res.setHeader("Content-Type", "application/json");
   
-      // Create a cursor to stream results
       const cursor = Sheet.find({}, { _id: 0, __v: 0 }).cursor();
   
       res.write("["); // Start JSON array
@@ -224,15 +224,20 @@ app.get("/fetchData", async (req, res) => {
   
       cursor.on("error", (err) => {
         console.error("Error streaming data:", err);
-        res.status(500).json({ message: "Error streaming data", error: err.message });
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Error streaming data", error: err.message });
+        } else {
+          res.end(); // Ensure the response is closed
+        }
       });
   
     } catch (error) {
       console.error("Error fetching data:", error.message);
-      res.status(500).json({ message: "Error fetching data", error: error.message });
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Error fetching data", error: error.message });
+      }
     }
   });
-  
   
   
 
