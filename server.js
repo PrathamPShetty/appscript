@@ -23,7 +23,7 @@ mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.
   useNewUrlParser: true,
   useUnifiedTopology: true,
   connectTimeoutMS: 100000, // 10 seconds
-  serverSelectionTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 100000,
   socketTimeoutMS: 20000,
 });
 
