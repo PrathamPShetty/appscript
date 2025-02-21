@@ -1103,7 +1103,6 @@
           populateSheetDropdown(data, savedSheet);
           const selectedSheet = sheetsData.find(sheet => sheet.sheet_name === savedSheet) || data[0];
           loadSheetData(selectedSheet);
-          fetchData();
         } else {
           alert("No data found!");
         }
@@ -1125,7 +1124,7 @@
 
       function fetchData() {
      
-          $.getJSON(apiUrl+"/get-sheets", function (data) {
+          $.getJSON(apiUrl+"/get-sheet", function (data) {
             //console.log(data);
             if (data && data.length > 0) {
               sheetsData = data;
