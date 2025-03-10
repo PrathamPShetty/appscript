@@ -15,7 +15,7 @@ app.use(cors());
 // app.use(cors({ origin: "https://register.mcceducare.com", credentials: true }));
 
 
-mongoose.connect("mongodb+srv://pratham:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect("mongodb+srv://pratha:fCjtZdGU9qgRefZw@cluster0.zuygi.mongodb.net/bdrctool?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 60000, // Increase server selection timeout
